@@ -20,5 +20,5 @@ while True:
 
 
 
-
+print("Connection close.")
 client_socket.close()
