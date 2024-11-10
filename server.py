@@ -50,7 +50,9 @@ def handle_connection(conn, client_addr):
 if __name__ == '__main__':
 
     db = db_connect()
-    fetch_data(db, cmd="test")
+    cur = db.cursor()
+
+    # fetch_data(cur, cmd="test")
 
     bind_ip = "127.0.0.1"
     bind_port = 8800
