@@ -9,9 +9,8 @@ client_socket.connect((conn_ip, conn_port))
 
 while True:
     recv_msg = client_socket.recv(100)
-    print("Receive msg from server:", recv_msg.decode('utf-8'))
-    send_msg = input("Please input msg: ")
-    
+    print(recv_msg.decode('utf-8'), end='')
+    send_msg = input()
     client_socket.send(send_msg.encode('utf-8'))
     
     # Client end connection
