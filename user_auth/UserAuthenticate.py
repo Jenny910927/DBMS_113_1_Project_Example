@@ -1,4 +1,4 @@
-class UserAutheticate:
+class UserAuthenticate:
     def __init__(self, action_name):
         self.action_name = action_name
 

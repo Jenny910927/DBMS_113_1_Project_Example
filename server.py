@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 from user_auth.LogIn import LogIn
 from user_auth.SignUp import SignUp
+from DB_utils import *
 
 
 
@@ -43,8 +44,13 @@ def handle_connection(conn, client_addr):
     conn.close() # close connection with the client
 
 
+
+
+
 if __name__ == '__main__':
 
+    db = db_connect()
+    fetch_data(db, cmd="test")
 
     bind_ip = "127.0.0.1"
     bind_port = 8800
@@ -64,4 +70,5 @@ if __name__ == '__main__':
         thread = Thread(target=handle_connection, args=(conn, client_addr,))
         thread.start()   
 
+    db.close()
     server_socket.close()
