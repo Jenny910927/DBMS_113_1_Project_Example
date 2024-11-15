@@ -22,7 +22,7 @@ try:
 
             send_msg = input().strip()
             while len(send_msg) == 0:
-                print("Input cannot be empty. Please enter again.")
+                print("Input cannot be empty. Please enter again:", end=' ')
                 send_msg = input().strip()
 
             if send_msg == "exit":

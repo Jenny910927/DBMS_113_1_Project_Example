@@ -58,7 +58,7 @@ def fetch_user(userid):
     pass
 
 # ============================= function for User =============================
-def create_study_group(cur, content, user_max, course_id, user_id, 
+def create_study_group(content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id):
 
     cmd =   """
@@ -68,12 +68,14 @@ def create_study_group(cur, content, user_max, course_id, user_id,
             Insert Into STUDY_EVENT_PERIOD (Event_date, Event_period, Classroom_id, Event_id)
             Values (%s, %s, %s, @newID);
             """
+    pass # TODO
+    print(cmd)
+
+    # for hour in range(event_duration):
+    #     cur.execute(cmd, [content, user_max, course_id, user_id, 
+    #                       event_date, event_period_start + hour, classroom_id])
     
-    for hour in range(event_duration):
-        cur.execute(cmd, [content, user_max, course_id, user_id, 
-                          event_date, event_period_start + hour, classroom_id])
-    
-def list_available_study_group(cur):
+def list_available_study_group():
     cmd =   """
             Select se.*
             From STUDY_EVENT As se
@@ -86,6 +88,7 @@ def list_available_study_group(cur):
                 Where se.Event_id = se2.Event_id
             );
             """
+    return # TODO
     cur.execute(cmd)
     
     # TODO: return or send fetch result 
@@ -97,6 +100,7 @@ def leave_study_group(cur, event_id, user_id):
             Delete From PARTICIPATION
             Where Event_id = %s And User_id = %s;
             """
+    return # TODO
     cur.execute(cmd, [event_id, user_id])
     
 def list_history(cur, user_id):
@@ -106,6 +110,7 @@ def list_history(cur, user_id):
             Join STUDY_EVENT As se On p.Event_id = se.Event_id
             Where p.User_id = %s;
             """
+    return # TODO
     cur.execute(cmd, [user_id])
 
     # TODO: return or send fetch result 
@@ -119,6 +124,7 @@ def find_course(cur, instructor_name, course_name):
             Where Instructor_name Like '%%s%'
             Or Course_name Like '%%s';
             """
+    return # TODO
     cur.execute(cmd, [instructor_name, course_name])
 
     # TODO: return or send fetch result 
@@ -132,7 +138,7 @@ def find_reserved_room_on_date(cur, event_date):
             Join Classroom As c On sep.Classroom_id = c.Classroom_id
             Where sep.Event_date = '%s;
             """
-    
+    return # TODO
     cur.execute(cmd, [event_date])
     # TODO: return or send fetch result 
     pass
@@ -145,6 +151,7 @@ def append_classroom(cur, building_name, capacity_size, floor_number, room_name)
             Insert Into CLASSROOM(%s, %s, %s, %s)
             Values ('共同', 120, 3, '312');
             """
+    return # TODO
     cur.execute(cmd, [building_name, capacity_size, floor_number, room_name])
 
 def remove_classroom(cur, classroom_id):
@@ -152,6 +159,7 @@ def remove_classroom(cur, classroom_id):
             Delete From CLASSROOM
             Where Classroom_id = %s;
             """
+    return # TODO
     cur.execute(cmd, [classroom_id])
 
 def update_classroom(cur, classroom_id, capacity_size):
@@ -160,6 +168,7 @@ def update_classroom(cur, classroom_id, capacity_size):
             Set Capacity_size = %s
             Where Classroom_id = %s;
             """
+    return # TODO
     cur.execute(cmd, [classroom_id, capacity_size])
 
 def list_classroom(cur, building_name):
@@ -168,6 +177,7 @@ def list_classroom(cur, building_name):
             From CLASSROOM
             Where Building_name = %s;
             """
+    return # TODO
     cur.execute(cmd, [building_name])
 
 def list_user_info(cur, user_id):
@@ -176,6 +186,7 @@ def list_user_info(cur, user_id):
             From USER
             Where User_id = %s;
             """
+    return # TODO
     cur.execute(cmd, [user_id])
 
 def list_course_info(cur, course_name):
@@ -185,6 +196,8 @@ def list_course_info(cur, course_name):
             Join COURSE As c On se.Course_id = c.Course_id
             Where c.Course_name = %s;
             """
+    
+    return # TODO
     cur.execute(cmd, [course_name])
 
 

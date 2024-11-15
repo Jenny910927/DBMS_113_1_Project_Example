@@ -26,6 +26,8 @@ class User(Role):
         return f'userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}'
     def get_username(self):
         return self.username
+    def get_userid(self):
+        return self.userid
     
 
     def list_action(self):
@@ -35,3 +37,17 @@ class User(Role):
         return msg
     
     
+    def read_action_from_client(self, conn):
+        recv_msg = conn.recv(100).decode("utf-8")
+        print(f'Receive msg from {client_addr}: {recv_msg}')
+        while recv_msg not in action_dict:
+            msg = "Wrong input, please select "
+            for key in action_dict.keys():
+                msg = msg + f'[{key}] '
+            msg += ': '
+            conn.send(msg.encode('utf-8'))
+            # conn.send(f'Wrong input, please select "1", "2", or "3"\n---> '.encode('utf-8'))
+            recv_msg = conn.recv(100).decode("utf-8")
+        print("Do action:", recv_msg)
+        
+        return welcome_action_dict[recv_msg]

@@ -5,12 +5,13 @@ from action.SignUp import SignUp
 from action.Exit import Exit
 from action.CreateEvent import CreateEvent
 from action.ListEvent import ListEvent
+from action.JoinEvent import JoinEvent
 from action.ModifyUserInfo import ModifyUserInfo
 
 from role.User import User
 
 from DB_utils import *
-
+from utils import *
 
 welcome_action_dict = {
     '1': LogIn("Log-in"),
@@ -21,34 +22,11 @@ welcome_action_dict = {
 user_action_dict = {
     '1': CreateEvent("Create Study Event"),
     '2': ListEvent("List All Available Study Events"),
-    # '3': JoinEvent("Join Study Event"),
+    '3': JoinEvent("Join Study Event"),
     '4': ModifyUserInfo("Modify User Info"),
     # '5': Logout("Logout"),
     '6': Exit("Leave System")
 }
-
-def get_action(action_dict):
-    recv_msg = conn.recv(100).decode("utf-8")
-    print(f'Receive msg from {client_addr}: {recv_msg}')
-    while recv_msg not in action_dict:
-        msg = "[INPUT]Wrong input, please select "
-        for key in action_dict.keys():
-            msg = msg + f'[{key}] '
-        msg += ': '
-        conn.send(msg.encode('utf-8'))
-        # conn.send(f'Wrong input, please select "1", "2", or "3"\n---> '.encode('utf-8'))
-        recv_msg = conn.recv(100).decode("utf-8")
-    print("Do action:", recv_msg)
-    
-    return action_dict[recv_msg]
-        
-
-
-def list_action(action_dict):
-    msg = ''
-    for key in action_dict:
-        msg = msg + f'[{key}] {action_dict[key].get_name()}\n'
-    return msg
 
 
 
@@ -58,11 +36,11 @@ def handle_connection(conn, client_addr):
         # print(msg)
 
         conn.send("Welcome to Study Group System! Please select your option:\n".encode('utf-8'))
-        conn.send(f'[INPUT]Please select your option:\n{list_action(welcome_action_dict)}---> '.encode('utf-8'))
+        conn.send(f'[INPUT]Please select your option:\n{list_option(welcome_action_dict)}---> '.encode('utf-8'))
         
         # conn.send(msg.encode('utf-8'))
             
-        action = get_action(welcome_action_dict)
+        action = get_selection(conn, welcome_action_dict)
         
         user = action.exec(conn)
         if user == -1:
@@ -77,9 +55,9 @@ def handle_connection(conn, client_addr):
             
             
             conn.send(f'----------------------------------------\nHi {user.get_username()}! '.encode('utf-8'))
-            conn.send(f'[INPUT]Please select your option:\n{list_action(user_action_dict)}---> '.encode('utf-8'))
-            action = get_action(user_action_dict)
-            action.exec(conn)
+            conn.send(f'[INPUT]Please select your option:\n{list_option(user_action_dict)}---> '.encode('utf-8'))
+            action = get_selection(conn, user_action_dict)
+            action.exec(conn, user)
 
             
             
