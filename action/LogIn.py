@@ -10,7 +10,7 @@ class LogIn(UserAuthenticate):
 
         # while not self._userid_exist(userid):
         while username is None:
-            conn.send("Userid not exist, please enter userid: ".encode('utf-8'))
+            conn.send("Userid not exist, please enter correct userid: ".encode('utf-8'))
             userid = self.read_userinfo(conn, "userid")
 
         pwd_input = self.read_userinfo(conn, "password")
@@ -23,9 +23,8 @@ class LogIn(UserAuthenticate):
             pwd_input = conn.recv(100).decode("utf-8")
             count -= 1
         if count == 0:
-            conn.send(f'Password incorrect'.encode('utf-8'))
-            raise Exception("Wrong Password")
-
+            conn.send(f'[EXIT]Connection close. Reason: Password incorrect.'.encode('utf-8'))
+            return -1
 
     # def _correct_pwd(self, pwd_input, pwd_correct): # TODO
     #     return True

@@ -31,8 +31,9 @@ def get_action(action_dict):
     
 
 def handle_connection(conn, client_addr):
-    while True:
-        try:
+    try:
+        while True:
+        
             # User Welcome 
             conn.send(f'Welcome to Study Group System! Please select your option:\n[1] Log-in\t[2] Sign-up\t[3] Quit\n---> '.encode('utf-8'))
             
@@ -41,6 +42,7 @@ def handle_connection(conn, client_addr):
 
             action = get_action(welcome_action)
             
+
             # print(f'Action type: {type(action)}')
 
             # TODO: Support Exit action
@@ -49,15 +51,20 @@ def handle_connection(conn, client_addr):
             #     conn.send(f'Exit system. Bye~'.encode('utf-8'))
             #     break
 
-            action.exec(conn)
+            ret = action.exec(conn)
+            if ret == -1:
+                break
             
             
             # userid = action.read_userid(conn)
             # pwd = action.read_pwd(conn)
             # print(f'Receive userid = {userid}, pwd = {pwd}')
 
-        except Exception:
-            break
+    # except Exception:
+        # break
+    finally:
+        conn.close()
+
     
     print(f"Connection with {client_addr} close.")
     conn.close() # close connection with the client
@@ -84,12 +91,13 @@ if __name__ == '__main__':
 
 
 
-    while True:
-        (conn, client_addr) = server_socket.accept()
-        print("Connect to client:", client_addr)
+    try:
+        while True:
+            (conn, client_addr) = server_socket.accept()
+            print("Connect to client:", client_addr)
 
-        thread = Thread(target=handle_connection, args=(conn, client_addr,))
-        thread.start()   
-
-    db.close()
-    server_socket.close()
+            thread = Thread(target=handle_connection, args=(conn, client_addr,))
+            thread.start()
+    finally:
+        db.close()
+        server_socket.close()
