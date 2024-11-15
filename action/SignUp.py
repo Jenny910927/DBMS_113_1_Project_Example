@@ -9,7 +9,7 @@ class SignUp(UserAuthenticate):
         # Read Username
         username = self.read_userinfo(conn, "username")
         while self._username_exist(username):
-            conn.send("Username exist, please enter another username: ".encode('utf-8'))
+            conn.send("[INPUT]Username exist, please enter another username: ".encode('utf-8'))
             username = self.read_userinfo(conn, "username")
         
         # Read Password

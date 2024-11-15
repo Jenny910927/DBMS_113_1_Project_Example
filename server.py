@@ -31,7 +31,7 @@ def get_action(action_dict):
     recv_msg = conn.recv(100).decode("utf-8")
     print(f'Receive msg from {client_addr}: {recv_msg}')
     while recv_msg not in action_dict:
-        msg = "Wrong input, please select "
+        msg = "[INPUT]Wrong input, please select "
         for key in action_dict.keys():
             msg = msg + f'[{key}] '
         msg += ': '
@@ -54,10 +54,13 @@ def list_action(action_dict):
 
 def handle_connection(conn, client_addr):
     try:
-        print("Enter handle connection")
-        msg = "Welcome to Study Group System! Please select your option:\n" + list_action(welcome_action_dict) + "---> "
-        print(msg)
-        conn.send(msg.encode('utf-8'))
+        # msg = "Welcome to Study Group System! Please select your option:\n" + list_action(welcome_action_dict) + "---> "
+        # print(msg)
+
+        conn.send("Welcome to Study Group System! Please select your option:\n".encode('utf-8'))
+        conn.send(f'[INPUT]Please select your option:\n{list_action(welcome_action_dict)}---> '.encode('utf-8'))
+        
+        # conn.send(msg.encode('utf-8'))
             
         action = get_action(welcome_action_dict)
         
@@ -73,7 +76,8 @@ def handle_connection(conn, client_addr):
             # conn.send(f'Welcome to Study Group System! Please select your option:\n[1] Log-in\t[2] Sign-up\t[3] Quit\n---> '.encode('utf-8'))
             
             
-            conn.send(f'Hi {user.get_username()}! Please select your option:\n{user.list_action()}---> '.encode('utf-8'))
+            conn.send(f'----------------------------------------\nHi {user.get_username()}! '.encode('utf-8'))
+            conn.send(f'[INPUT]Please select your option:\n{list_action(user_action_dict)}---> '.encode('utf-8'))
             action = get_action(user_action_dict)
             action.exec(conn)
 
