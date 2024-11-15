@@ -7,16 +7,20 @@ DB_USER = "DBTA"
 DB_HOST = "127.0.0.1"
 DB_PORT = 5432
 
-
+cur = None
+db = None
 
 def db_connect():
     exit_code = 0
-    db = None
+    # db = None
     try:
+        global db
         db = psycopg2.connect(database=DB_NAME, user=DB_USER, password='1234', 
                               host=DB_HOST, port=DB_PORT)
         # exit_code = main(db)
         print("Successfully connect to DBMS.")
+        global cur
+        cur = db.cursor()
         return db
         
     except psycopg2.Error as err:
@@ -38,6 +42,20 @@ def fetch_data(cur, cmd):
         for tup in cur.fetchall():
             print(f'fetch: {tup}')
 
+
+
+# ============================= System function =============================
+def db_register_user(userid, username, pwd, email):
+    # TODO
+    pass
+
+def fetch_user(userid): 
+    # TODO: fetch user info
+
+    return "Jenny", "1234", "jenny@gmail.com", "User"
+
+    # TODO: check user is User or Admin
+    pass
 
 # ============================= function for User =============================
 def create_study_group(cur, content, user_max, course_id, user_id, 
@@ -169,4 +187,4 @@ def list_course_info(cur, course_name):
             """
     cur.execute(cmd, [course_name])
 
-    
+

@@ -6,12 +6,12 @@ from action.Exit import Exit
 
 from DB_utils import *
 
+
 welcome_action = {
     '1': LogIn("Log-in"),
     '2': SignUp("Sign-up"),
     '3': Exit("Exit")
 }
-
 
 def get_action(action_dict):
     recv_msg = conn.recv(100).decode("utf-8")
@@ -19,10 +19,12 @@ def get_action(action_dict):
     while recv_msg not in action_dict:
         msg = "Wrong input, please select "
         for key in action_dict.keys():
-            msg = msg + f"{key}"
+            msg = msg + f'[{key}] '
+        msg += ': '
         conn.send(msg.encode('utf-8'))
         # conn.send(f'Wrong input, please select "1", "2", or "3"\n---> '.encode('utf-8'))
         recv_msg = conn.recv(100).decode("utf-8")
+    print("Do action:", recv_msg)
     
     return welcome_action[recv_msg]
         
@@ -38,6 +40,15 @@ def handle_connection(conn, client_addr):
             #     break 
 
             action = get_action(welcome_action)
+            
+            # print(f'Action type: {type(action)}')
+
+            # TODO: Support Exit action
+            # if action.isclass(Exit):
+            #     print("IS EXIT")
+            #     conn.send(f'Exit system. Bye~'.encode('utf-8'))
+            #     break
+
             action.exec(conn)
             
             
