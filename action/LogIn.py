@@ -1,11 +1,13 @@
 from .UserAuthenticate import UserAuthenticate
+from role.User import User
 from DB_utils import fetch_user
+
 class LogIn(UserAuthenticate):
     def exec(self, conn):
         userid = self.read_userinfo(conn, "userid")
         print(f'Read userid: {userid}')
 
-        username, pwd, email, role = fetch_user(userid)
+        username, pwd, email, isUser, isAdmin = fetch_user(userid)
         print(f'After fetch')
 
         # while not self._userid_exist(userid):
@@ -25,6 +27,9 @@ class LogIn(UserAuthenticate):
         if count == 0:
             conn.send(f'[EXIT]Connection close. Reason: Password incorrect.'.encode('utf-8'))
             return -1
+        
+        
+        return User(userid, username, pwd, email, isUser, isAdmin)
 
     # def _correct_pwd(self, pwd_input, pwd_correct): # TODO
     #     return True

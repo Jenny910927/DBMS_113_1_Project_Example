@@ -1,16 +1,16 @@
-from DB_utils import db_register_user
 from .UserAuthenticate import UserAuthenticate
+from role.User import User
+from DB_utils import db_register_user
+
 class SignUp(UserAuthenticate):
     def exec(self, conn):
-        print(f'Enter SignUp Action')
-        # Read Userid
-        userid = self.read_userinfo(conn, "userid")
-        while self._userid_exist(userid):
-            conn.send("Userid exist, please enter another userid: ".encode('utf-8'))
-            userid = self.read_userinfo(conn, "userid")
+        # print(f'Enter SignUp Action')
 
-        # Read Userid
-        username = self.read_userinfo(conn, "username")       
+        # Read Username
+        username = self.read_userinfo(conn, "username")
+        while self._username_exist(username):
+            conn.send("Username exist, please enter another username: ".encode('utf-8'))
+            username = self.read_userinfo(conn, "username")
         
         # Read Password
         pwd = self.read_userinfo(conn, "password")
@@ -23,14 +23,14 @@ class SignUp(UserAuthenticate):
         email = self.read_userinfo(conn, "email")
 
         # Add to DB
-        db_register_user(userid, username, pwd, email)
+        userid = db_register_user(username, pwd, email)
 
-        # return userid, username, pwd, email, "User"
+        return User(userid, username, pwd, email, True, False)
 
-        pass
 
 
     
-    def _userid_exist(self, userid):
+    def _username_exist(self, username):
+        # TODO
         return False
     

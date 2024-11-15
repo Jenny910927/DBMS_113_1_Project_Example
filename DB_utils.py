@@ -45,14 +45,14 @@ def fetch_data(cur, cmd):
 
 
 # ============================= System function =============================
-def db_register_user(userid, username, pwd, email):
+def db_register_user(username, pwd, email):
     # TODO
     pass
 
 def fetch_user(userid): 
     # TODO: fetch user info
 
-    return "Jenny", "1234", "jenny@gmail.com", "User"
+    return "Jenny", "1234", "jenny@gmail.com", True, False
 
     # TODO: check user is User or Admin
     pass

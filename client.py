@@ -10,7 +10,7 @@ client_socket.connect((conn_ip, conn_port))
 try: 
     while True:
         
-        recv_msg = client_socket.recv(100).decode('utf-8')
+        recv_msg = client_socket.recv(1000).decode('utf-8')
         if not recv_msg:
             print("Connection closed by the server.")
             break
