@@ -6,7 +6,9 @@ from action.Exit import Exit
 from action.Logout import Logout
 from action.CreateEvent import CreateEvent
 from action.ListEvent import ListEvent
+from action.ListHistory import ListHistory
 from action.JoinEvent import JoinEvent
+from action.LeaveEvent import LeaveEvent
 from action.ModifyUserInfo import ModifyUserInfo
 
 from role.User import User
@@ -24,9 +26,11 @@ user_action_dict = {
     '1': CreateEvent("Create Study Event"),
     '2': ListEvent("List All Available Study Events"),
     '3': JoinEvent("Join Study Event"),
-    '4': ModifyUserInfo("Modify User Info"),
-    '5': Logout("Logout"),
-    '6': Exit("Leave System")
+    '4': LeaveEvent("Leave Study Event"),
+    '5': ListHistory("List Study Group History"),
+    '6': ModifyUserInfo("Modify User Info"),
+    '7': Logout("Logout"),
+    '8': Exit("Leave System")
 }
 
 

@@ -192,28 +192,34 @@ def list_available_study_group() -> str:
 
     return print_table(cur)
 
+def join_study_group(user_id, event_id, join_time):
+    query = """
+            Insert Into PARTICIPATION (User_id, Event_id, Join_Time)
+            Values (%s, %s, %s);
+            """
+    cur.execute(query, [user_id, event_id, join_time])
+    db.commit()
+    return
+    
 
-def leave_study_group(cur, event_id, user_id):
-    cmd =   """
+def leave_study_group(user_id, event_id):
+    query = """
             Delete From PARTICIPATION
             Where Event_id = %s And User_id = %s;
             """
-    return # TODO
-    cur.execute(cmd, [event_id, user_id])
+    cur.execute(query, [event_id, user_id])
     db.commit()
     
-def list_history(cur, user_id):
-    cmd =   """
+def list_history(user_id):
+    query = """
             Select se.*
             From PARTICIPATION As p
             Join STUDY_EVENT As se On p.Event_id = se.Event_id
             Where p.User_id = %s;
             """
-    return # TODO
-    cur.execute(cmd, [user_id])
+    cur.execute(query, [user_id])
 
-    # TODO: return or send fetch result 
-    pass
+    return print_table(cur)
 
 
 def find_course(cur, instructor_name, course_name):

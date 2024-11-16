@@ -9,14 +9,16 @@ client_socket.connect((conn_ip, conn_port))
 
 try: 
     while True: # Keep receiving and sending message with server
-        # while True: # Keep receiving message from server until input signal
+        
         recv_msg = client_socket.recv(10000).decode('utf-8')
         if not recv_msg:
             print("Connection closed by the server.")
-            raise Exception("End connection")
+            break
+            # raise Exception("End connection")
         if recv_msg.find("[EXIT]") != -1:
             print(recv_msg.replace("[EXIT]", ''), end='')
-            raise Exception("End connection")
+            break
+            # raise Exception("End connection")
         if recv_msg.find("[INPUT]") != -1:
             print(recv_msg.replace("[INPUT]", ''), end='')
 
@@ -35,9 +37,9 @@ try:
 
         # Client end connection
         
-except Exception:
-    print("Connection close.")
-    client_socket.close()
+# except Exception:
+#     print("Connection close.")
+#     client_socket.close()
     
 finally:
     print("Connection close.")
