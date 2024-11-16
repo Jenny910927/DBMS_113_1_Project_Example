@@ -20,5 +20,4 @@ class CreateEvent(Action):
 
         create_study_group(content, user_max, course_id, user_id, 
                             event_date, event_period_start, event_duration, classroom_id)
-        
 

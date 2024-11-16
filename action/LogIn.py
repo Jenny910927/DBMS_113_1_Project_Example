@@ -7,13 +7,19 @@ class LogIn(UserAuthenticate):
         userid = self.read_userinfo(conn, "userid")
         print(f'Read userid: {userid}')
 
+        while not userid.isdigit():
+            conn.send("Input is not numeric, ".encode('utf-8'))
+            userid = self.read_userinfo(conn, "correct userid")
+
+
         username, pwd, email, isUser, isAdmin = fetch_user(userid)
-        print(f'After fetch')
+        print(f'--After fetch')
 
         # while not self._userid_exist(userid):
         while username is None:
-            conn.send("[INPUT]Userid not exist, please enter correct userid: ".encode('utf-8'))
-            userid = self.read_userinfo(conn, "userid")
+            conn.send("Userid not exist, ".encode('utf-8'))
+            userid = self.read_userinfo(conn, "correct userid")
+            username, pwd, email, isUser, isAdmin = fetch_user(userid)
 
         pwd_input = self.read_userinfo(conn, "password")
         print(f'Read pwd: {pwd_input}')

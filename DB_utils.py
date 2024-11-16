@@ -41,21 +41,87 @@ def fetch_data(cur, cmd):
 
         for tup in cur.fetchall():
             print(f'fetch: {tup}')
+    if cmd == "login":
+        cmd =   """
+            select * 
+            from Users u
+            join user_role r on u.User_id = r.User_id
+            where u.User_id = %s;
+            """
+        cur.execute(cmd, [1])
+
+        for tup in cur.fetchall():
+            print(f'fetch: {tup}')
 
 
 
 # ============================= System function =============================
 def db_register_user(username, pwd, email):
-    # TODO
-    pass
+    print(f'db_register_user | ')
+    cmd =   """
+            insert into Users (User_name, Password, Email) values (%s, %s, %s)
+            RETURNING User_id;
+            """
+    cur.execute(cmd, [username, pwd, email])
+    userid = cur.fetchone()[0]
+    print(f'Generate userid: {userid}')
+
+    cmd =   """
+            insert into User_Role (User_id, Role) VALUES (%s, 'User');
+            """
+    cur.execute(cmd, [userid])
+    db.commit()
+
+
+    return userid
 
 def fetch_user(userid): 
-    # TODO: fetch user info
+    # fetch_data(cur, "test")
+    cmd =   """
+            select * 
+            from Users u
+            join user_role r on u.User_id = r.User_id
+            where u.User_id = %s;
+            """
+    print(f'SQL cmd = {cmd}')
+    cur.execute(cmd, [userid])
 
-    return "Jenny", "1234", "jenny@gmail.com", True, False
+    print(f'After Fetch')
 
-    # TODO: check user is User or Admin
-    pass
+    rows = cur.fetchall()
+    print(f'rows: {rows}')
+    if not rows:
+        return None, None, None, None, None
+    else:
+        isUser = False
+        isAdmin = False
+        for row in rows:
+            userid, username, pwd, email, userid, role = row  #TODO: remove second userid
+            
+            if role == 'User':
+                isUser = True
+            elif role == 'Admin':
+                isAdmin = True
+
+    return username, pwd, email, isUser, isAdmin
+
+def username_exist(username):
+    print(f'username_exist | Enter')
+    cmd =   """
+            select count(*) 
+            from Users
+            where User_name = %s;
+            """
+    cur.execute(cmd, [username])
+    print(f'username_exist | After exec')
+
+
+    count = cur.fetchone()[0]
+    # print(f'username_exist | Get count: {count}')
+    return count > 0
+    
+
+
 
 # ============================= function for User =============================
 def create_study_group(content, user_max, course_id, user_id, 

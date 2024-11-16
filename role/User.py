@@ -28,6 +28,8 @@ class User(Role):
         return self.username
     def get_userid(self):
         return self.userid
+    def get_email(self):
+        return self.email
     
 
     def list_action(self):
