@@ -22,6 +22,8 @@ class User(Role):
         }
         print(f'Create user | userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}')
 
+    def get_info_msg_no_pwd(self):
+        return f'userid: {self.userid}, username: {self.username}, email: {self.email}'
     def get_info_msg(self):
         return f'userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}'
     def get_username(self):

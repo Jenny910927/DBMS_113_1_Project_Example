@@ -37,8 +37,5 @@ class LogIn(UserAuthenticate):
         
         return User(userid, username, pwd, email, isUser, isAdmin)
 
-    # def _correct_pwd(self, pwd_input, pwd_correct): # TODO
-    #     return True
-
       
     

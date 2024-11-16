@@ -29,10 +29,3 @@ class SignUp(UserAuthenticate):
 
         return User(userid, username, pwd, email, True, False)
 
-
-
-    
-    # def _username_exist(self, username):
-    #     # TODO
-    #     return False
-    

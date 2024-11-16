@@ -1,5 +1,8 @@
 
 def get_selection(conn, option_dict):
+    # if isinstance(options, dict):
+    #     options = option_dict.keys()
+
     recv_msg = conn.recv(100).decode("utf-8")
     # print(f'Receive msg from {client_addr}: {recv_msg}')
     while recv_msg not in option_dict:
@@ -16,8 +19,13 @@ def get_selection(conn, option_dict):
         
 
 
-def list_option(option_dict):
+def list_option(options):
     msg = ''
-    for key in option_dict:
-        msg = msg + f'[{key}] {option_dict[key].get_name()}\n'
+    if isinstance(options, dict):
+        for idx, option in options.items():
+            msg = msg + f'[{idx}] {option.get_name()}\n'
+    elif isinstance(options, list):
+        for idx, option in enumerate(options, 1):
+            msg = msg + f'[{idx}] {option}\n'
+
     return msg

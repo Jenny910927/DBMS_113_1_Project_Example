@@ -57,14 +57,14 @@ def fetch_data(cur, cmd):
 
 # ============================= System function =============================
 def db_register_user(username, pwd, email):
-    print(f'db_register_user | ')
+    # print(f'db_register_user | ')
     cmd =   """
             insert into Users (User_name, Password, Email) values (%s, %s, %s)
             RETURNING User_id;
             """
     cur.execute(cmd, [username, pwd, email])
     userid = cur.fetchone()[0]
-    print(f'Generate userid: {userid}')
+    # print(f'Generate userid: {userid}')
 
     cmd =   """
             insert into User_Role (User_id, Role) VALUES (%s, 'User');
@@ -76,20 +76,15 @@ def db_register_user(username, pwd, email):
     return userid
 
 def fetch_user(userid): 
-    # fetch_data(cur, "test")
     cmd =   """
             select * 
             from Users u
             join user_role r on u.User_id = r.User_id
             where u.User_id = %s;
             """
-    print(f'SQL cmd = {cmd}')
     cur.execute(cmd, [userid])
 
-    print(f'After Fetch')
-
     rows = cur.fetchall()
-    print(f'rows: {rows}')
     if not rows:
         return None, None, None, None, None
     else:
@@ -106,24 +101,46 @@ def fetch_user(userid):
     return username, pwd, email, isUser, isAdmin
 
 def username_exist(username):
-    print(f'username_exist | Enter')
+    # print(f'username_exist | Enter')
     cmd =   """
             select count(*) 
             from Users
             where User_name = %s;
             """
     cur.execute(cmd, [username])
-    print(f'username_exist | After exec')
+    # print(f'username_exist | After exec')
 
 
     count = cur.fetchone()[0]
     # print(f'username_exist | Get count: {count}')
     return count > 0
     
-
+def userid_exist(userid):
+    cmd =   """
+            select count(*) 
+            from Users
+            where User_id = %s;
+            """
+    cur.execute(cmd, [userid])
+    count = cur.fetchone()[0]
+    # print(f'username_exist | Get count: {count}')
+    return count > 0
 
 
 # ============================= function for User =============================
+def update_user_info(userid, item, new_value):
+    cmd =  f"""
+            update Users
+            set {item} = %s
+            where User_id = %s;
+            """
+    print(f'Update User Info | {userid}: {item}->{new_value}')
+    # print(cur.mogrify(cmd, [item, new_value, userid]))
+    cur.execute(cmd, [new_value, userid])
+    print(f'After update')
+    db.commit()
+    return
+
 def create_study_group(content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id):
 
@@ -140,6 +157,8 @@ def create_study_group(content, user_max, course_id, user_id,
     # for hour in range(event_duration):
     #     cur.execute(cmd, [content, user_max, course_id, user_id, 
     #                       event_date, event_period_start + hour, classroom_id])
+
+    # db.commit()
     
 def list_available_study_group():
     cmd =   """
@@ -168,6 +187,7 @@ def leave_study_group(cur, event_id, user_id):
             """
     return # TODO
     cur.execute(cmd, [event_id, user_id])
+    db.commit()
     
 def list_history(cur, user_id):
     cmd =   """
@@ -219,6 +239,7 @@ def append_classroom(cur, building_name, capacity_size, floor_number, room_name)
             """
     return # TODO
     cur.execute(cmd, [building_name, capacity_size, floor_number, room_name])
+    db.commit()
 
 def remove_classroom(cur, classroom_id):
     cmd =   """
@@ -227,6 +248,7 @@ def remove_classroom(cur, classroom_id):
             """
     return # TODO
     cur.execute(cmd, [classroom_id])
+    db.commit()
 
 def update_classroom(cur, classroom_id, capacity_size):
     cmd =   """
@@ -236,6 +258,7 @@ def update_classroom(cur, classroom_id, capacity_size):
             """
     return # TODO
     cur.execute(cmd, [classroom_id, capacity_size])
+    db.commit()
 
 def list_classroom(cur, building_name):
     cmd =   """
@@ -245,6 +268,7 @@ def list_classroom(cur, building_name):
             """
     return # TODO
     cur.execute(cmd, [building_name])
+    db.commit()
 
 def list_user_info(cur, user_id):
     cmd =   """
