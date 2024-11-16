@@ -9,7 +9,7 @@ class CreateEvent(Action):
         content = self.read_input(conn, "study description")
         user_max = self.read_input(conn, "maximum number of user")
         event_date = self.read_input(conn, "event date (in YYYY-MM-DD format)")
-        event_period_start = self.read_input(conn, "event start time (in HH:MI:SS format)")
+        event_period_start = self.read_input(conn, "event start time (between 8 to 21)")
         event_duration = self.read_input(conn, "event duration (min=1, max=3)")
 
         if user is None:

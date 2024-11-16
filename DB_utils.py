@@ -151,22 +151,24 @@ def update_user_info(userid, item, new_value):
 
 def create_study_group(content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id):
-
-    cmd =   """
-            Insert Into STUDY_EVENT (Content, Status, User_max, Course_id, User_id)
-            Values (%s, 'Ongoing', %s, %s, %s);
-            Set @newID = last_insert_id();
-            Insert Into STUDY_EVENT_PERIOD (Event_date, Event_period, Classroom_id, Event_id)
-            Values (%s, %s, %s, @newID);
-            """
-    pass # TODO
-    print(cmd)
+    
+    query = "select Create_Study_Group(%s, %s, %s, %s, %s, %s, %s, %s);"
+    cur.execute(query, [content, user_max, course_id, user_id, 
+                       event_date, event_period_start, event_duration, classroom_id])
+    # cmd =   """
+    #         Insert Into STUDY_EVENT (Content, Status, User_max, Course_id, Owner_id)
+    #         Values (%s, 'Ongoing', %s, %s, %s);
+    #         Set @newID = last_insert_id();
+    #         Insert Into STUDY_EVENT_PERIOD (Event_date, Event_period, Classroom_id, Event_id)
+    #         Values (%s, %s, %s, @newID);
+    #         """
+    # # print(cmd)
 
     # for hour in range(event_duration):
     #     cur.execute(cmd, [content, user_max, course_id, user_id, 
     #                       event_date, event_period_start + hour, classroom_id])
 
-    # db.commit()
+    db.commit()
 
 
 def list_available_study_group() -> str:
