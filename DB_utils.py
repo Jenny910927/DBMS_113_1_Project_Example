@@ -1,6 +1,7 @@
 import sys
 import psycopg2
-
+import pandas as pd
+from tabulate import tabulate
 
 DB_NAME = "STUDY_GROUP"
 DB_USER = "DBTA"
@@ -53,6 +54,12 @@ def fetch_data(cur, cmd):
         for tup in cur.fetchall():
             print(f'fetch: {tup}')
 
+
+def print_table(cur):
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+
+    return tabulate(rows, headers=columns, tablefmt="github")
 
 
 # ============================= System function =============================
@@ -127,6 +134,7 @@ def userid_exist(userid):
     return count > 0
 
 
+
 # ============================= function for User =============================
 def update_user_info(userid, item, new_value):
     cmd =  f"""
@@ -159,9 +167,10 @@ def create_study_group(content, user_max, course_id, user_id,
     #                       event_date, event_period_start + hour, classroom_id])
 
     # db.commit()
-    
-def list_available_study_group():
-    cmd =   """
+
+
+def list_available_study_group() -> str:
+    query = """
             Select se.*
             From STUDY_EVENT As se
             Left Join PARTICIPATION As p On se.Event_id = p.Event_id
@@ -173,11 +182,10 @@ def list_available_study_group():
                 Where se.Event_id = se2.Event_id
             );
             """
-    return # TODO
-    cur.execute(cmd)
     
-    # TODO: return or send fetch result 
-    pass
+    cur.execute(query)
+
+    return print_table(cur)
 
 
 def leave_study_group(cur, event_id, user_id):

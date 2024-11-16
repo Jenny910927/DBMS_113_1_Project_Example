@@ -46,7 +46,7 @@ def handle_connection(conn, client_addr):
         if user == -1:
             raise Exception("End connection")
         
-        send_msg =  f'----------------------------------------\nHi {user.get_username()}!\n' + \
+        send_msg =  f'\n----------------------------------------\n\nHi {user.get_username()}!\n' + \
                     f'[ User Info ] {user.get_info_msg_no_pwd()}\n'
         conn.send(send_msg.encode('utf-8'))
 
@@ -58,7 +58,7 @@ def handle_connection(conn, client_addr):
             
             # conn.send(f'----------------------------------------\nHi {user.get_username()}!\n'.encode('utf-8'))
             # conn.send(f'User Info | userid: {user.get_userid()}, username: {user.get_username()}, email: {user.get_email()}\n'.encode('utf-8'))
-            conn.send(f'----------------------------------------\n'.encode('utf-8'))
+            conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
             conn.send(f'[INPUT]Please select your option:\n{list_option(user_action_dict)}---> '.encode('utf-8'))
             action = get_selection(conn, user_action_dict)
             action.exec(conn, user)
