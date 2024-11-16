@@ -168,7 +168,10 @@ def create_study_group(content, user_max, course_id, user_id,
     #     cur.execute(cmd, [content, user_max, course_id, user_id, 
     #                       event_date, event_period_start + hour, classroom_id])
 
+    event_id = cur.fetchone()[0]
     db.commit()
+
+    return event_id
 
 
 def list_available_study_group() -> str:

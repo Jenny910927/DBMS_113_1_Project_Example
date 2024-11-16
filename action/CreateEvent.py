@@ -18,6 +18,6 @@ class CreateEvent(Action):
         print("User id =", user_id)
         
 
-        create_study_group(content, user_max, course_id, user_id, 
+        event_id = create_study_group(content, user_max, course_id, user_id, 
                             event_date, event_period_start, event_duration, classroom_id)
-
+        conn.send(f'\nCreat study group successfully! Event id: {event_id}\n'.encode('utf-8'))

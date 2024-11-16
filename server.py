@@ -3,6 +3,7 @@ from threading import Thread
 from action.LogIn import LogIn
 from action.SignUp import SignUp
 from action.Exit import Exit
+from action.Logout import Logout
 from action.CreateEvent import CreateEvent
 from action.ListEvent import ListEvent
 from action.JoinEvent import JoinEvent
@@ -24,7 +25,7 @@ user_action_dict = {
     '2': ListEvent("List All Available Study Events"),
     '3': JoinEvent("Join Study Event"),
     '4': ModifyUserInfo("Modify User Info"),
-    # '5': Logout("Logout"),
+    '5': Logout("Logout"),
     '6': Exit("Leave System")
 }
 
@@ -32,36 +33,33 @@ user_action_dict = {
 
 def handle_connection(conn, client_addr):
     try:
-        # msg = "Welcome to Study Group System! Please select your option:\n" + list_action(welcome_action_dict) + "---> "
-        # print(msg)
+        
+        while True: # Welcome Page
+            conn.send("----------------------------------------\nWelcome to Study Group System! Please select your option:\n".encode('utf-8'))
+            conn.send(f'[INPUT]Please select your option:\n{list_option(welcome_action_dict)}---> '.encode('utf-8'))
+            
+            # conn.send(msg.encode('utf-8'))
+                
+            action = get_selection(conn, welcome_action_dict)
+            
+            user = action.exec(conn)
+            if user == -1:
+                raise Exception("End connection")
+            
+            send_msg =  f'\n----------------------------------------\n\nHi {user.get_username()}!\n' + \
+                        f'[ User Info ] {user.get_info_msg_no_pwd()}\n'
+            conn.send(send_msg.encode('utf-8'))
 
-        conn.send("Welcome to Study Group System! Please select your option:\n".encode('utf-8'))
-        conn.send(f'[INPUT]Please select your option:\n{list_option(welcome_action_dict)}---> '.encode('utf-8'))
-        
-        # conn.send(msg.encode('utf-8'))
-            
-        action = get_selection(conn, welcome_action_dict)
-        
-        user = action.exec(conn)
-        if user == -1:
-            raise Exception("End connection")
-        
-        send_msg =  f'\n----------------------------------------\n\nHi {user.get_username()}!\n' + \
-                    f'[ User Info ] {user.get_info_msg_no_pwd()}\n'
-        conn.send(send_msg.encode('utf-8'))
-
-        while True:
-        
-            # User Welcome 
-            # conn.send(f'Welcome to Study Group System! Please select your option:\n[1] Log-in\t[2] Sign-up\t[3] Quit\n---> '.encode('utf-8'))
-            
-            
-            # conn.send(f'----------------------------------------\nHi {user.get_username()}!\n'.encode('utf-8'))
-            # conn.send(f'User Info | userid: {user.get_userid()}, username: {user.get_username()}, email: {user.get_email()}\n'.encode('utf-8'))
-            conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
-            conn.send(f'[INPUT]Please select your option:\n{list_option(user_action_dict)}---> '.encode('utf-8'))
-            action = get_selection(conn, user_action_dict)
-            action.exec(conn, user)
+            while True: # Function Page
+                
+                # conn.send(f'----------------------------------------\nHi {user.get_username()}!\n'.encode('utf-8'))
+                # conn.send(f'User Info | userid: {user.get_userid()}, username: {user.get_username()}, email: {user.get_email()}\n'.encode('utf-8'))
+                conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
+                conn.send(f'[INPUT]Please select your option:\n{list_option(user_action_dict)}---> '.encode('utf-8'))
+                action = get_selection(conn, user_action_dict)
+                ret = action.exec(conn, user)
+                if ret == -1:
+                    break
 
             
             

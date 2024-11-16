@@ -9,7 +9,7 @@ create or replace function Create_Study_Group(
     event_period_start INTEGER,
     event_duration BIGINT,
     classroom_id BIGINT
-) returns VOID
+) returns BIGINT
 as $$
 declare
     new_event_id BIGINT;
@@ -26,6 +26,7 @@ BEGIN
         INSERT INTO STUDY_EVENT_PERIOD (Event_date, Event_period, Classroom_id, Event_id)
         VALUES (event_date, event_period_start+i, classroom_id, new_event_id);
     end loop;
+    return new_event_id;
 END;
 $$ LANGUAGE plpgsql;
 
