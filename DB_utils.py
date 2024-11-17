@@ -320,15 +320,40 @@ def update_classroom(classroom_id, item, new_value):
     cur.execute(query, [new_value, classroom_id])
     db.commit()
 
-def list_classroom(cur, building_name):
-    cmd =   """
+def search_classroom(building_name, capacity_size, floor_number, room_name):
+    query =   """
             Select *
             From "CLASSROOM"
-            Where Building_name = %s;
+            Where 
             """
-    return # TODO
-    cur.execute(cmd, [building_name])
-    db.commit()
+    count = 0
+    if building_name != "None":
+        count += 1
+        query += f"Building_name Like '%{building_name}%'"
+    if capacity_size != "None":
+        if count > 0:
+            query += ' And '
+        count += 1
+        query += f"Capacity_size = {capacity_size}"
+    if floor_number != "None":
+        if count > 0:
+            query += ' And '
+        count += 1
+        query += f"Floor_number = {floor_number}"
+    if room_name != "None":
+        if count > 0:
+            query += ' And '
+        count += 1
+        query += f"Room_name Like '%{room_name}%'"
+    query += ';'
+        
+    if count == 0: # All argument is "None" (No keyword for search)
+        return "Search column cannot be all empty."
+    
+    print(cur.mogrify(query))
+    cur.execute(query)
+
+    return print_table(cur)
 
 def list_user_info(cur, user_id):
     cmd =   """
