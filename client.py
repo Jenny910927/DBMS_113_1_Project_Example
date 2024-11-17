@@ -14,11 +14,9 @@ try:
         if not recv_msg:
             print("Connection closed by the server.")
             break
-            # raise Exception("End connection")
         if recv_msg.find("[EXIT]") != -1:
             print(recv_msg.replace("[EXIT]", ''), end='')
             break
-            # raise Exception("End connection")
         if recv_msg.find("[INPUT]") != -1:
             print(recv_msg.replace("[INPUT]", ''), end='')
 
@@ -34,13 +32,6 @@ try:
         
             print(recv_msg, end='')
         
-
-        # Client end connection
-        
-# except Exception:
-#     print("Connection close.")
-#     client_socket.close()
-    
 finally:
     print("Connection close.")
     client_socket.close()

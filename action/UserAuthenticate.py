@@ -10,7 +10,6 @@ class UserAuthenticate(Action):
         if ret == -1:
             print(f'sening error')
         recv_msg = conn.recv(100).decode("utf-8")
-        # print(f'Receive userinfo: {info_str}={recv_msg}')
         return recv_msg
 
 

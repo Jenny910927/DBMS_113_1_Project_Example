@@ -9,15 +9,11 @@ class SignUp(UserAuthenticate):
         # Read Username
         username = self.read_userinfo(conn, "username")
         while username_exist(username):
-            # conn.send("[INPUT]Username exist, please enter another username: ".encode('utf-8'))
             conn.send("Username exist, ".encode('utf-8'))
             username = self.read_userinfo(conn, "another username")
         
         # Read Password
         pwd = self.read_userinfo(conn, "password")
-        # TODO: double check pwd
-        # pwd2 = self.read_pwd(conn, confirm_pwd=True)
-        # if(pwd != pwd2):
 
 
         # Read_email

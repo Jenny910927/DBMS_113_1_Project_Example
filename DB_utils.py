@@ -14,7 +14,6 @@ create_event_lock = Lock()
 
 def db_connect():
     exit_code = 0
-    # db = None
     try:
         global db
         db = psycopg2.connect(database=DB_NAME, user=DB_USER, password='1234', 
@@ -37,43 +36,20 @@ def db_connect():
     #         db.close()
     sys.exit(exit_code)
     
-
-# def fetch_data(cur, cmd):
-    if cmd == "test":
-        cur.execute('select count(*) from "USER";')
-
-        for tup in cur.fetchall():
-            print(f'fetch: {tup}')
-    if cmd == "login":
-        cmd =   """
-            select * 
-            from "USER" u
-            join user_role r on u.User_id = r.User_id
-            where u.User_id = %s;
-            """
-        cur.execute(cmd, [1])
-
-        for tup in cur.fetchall():
-            print(f'fetch: {tup}')
-
-
 def print_table(cur):
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
 
     return tabulate(rows, headers=columns, tablefmt="github")
 
-
 # ============================= System function =============================
 def db_register_user(username, pwd, email):
-    # print(f'db_register_user | ')
     cmd =   """
             insert into "USER" (User_name, Password, Email) values (%s, %s, %s)
             RETURNING User_id;
             """
     cur.execute(cmd, [username, pwd, email])
     userid = cur.fetchone()[0]
-    # print(f'Generate userid: {userid}')
 
     cmd =   """
             insert into "USER_ROLE" (User_id, Role) VALUES (%s, 'User');
@@ -111,7 +87,6 @@ def fetch_user(userid):
 
 def username_exist(username):
     
-    # print(f'username_exist | Enter')
     cmd =   """
             select count(*) from "USER"
             where User_name = %s;
@@ -119,11 +94,8 @@ def username_exist(username):
     print(cur.mogrify(cmd, [username]))
     cur.execute(cmd, [username])
 
-    # print(f'username_exist | After exec')
-
 
     count = cur.fetchone()[0]
-    # print(f'username_exist | Get count: {count}')
     return count > 0
     
 def userid_exist(userid):
@@ -134,7 +106,6 @@ def userid_exist(userid):
             """
     cur.execute(cmd, [userid])
     count = cur.fetchone()[0]
-    # print(f'username_exist | Get count: {count}')
     return count > 0
 
 
@@ -147,7 +118,6 @@ def update_user_info(userid, item, new_value):
             where User_id = %s;
             """
     print(f'Update User Info | {userid}: {item}->{new_value}')
-    # print(cur.mogrify(cmd, [item, new_value, userid]))
     cur.execute(cmd, [new_value, userid])
     print(f'After update')
     db.commit()
@@ -164,18 +134,6 @@ def create_study_group(content, user_max, course_id, user_id,
     query = "select Create_Study_Group(%s, %s, %s, %s, %s, %s, %s, %s);"
     cur.execute(query, [content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id])
-    # cmd =   """
-    #         Insert Into STUDY_EVENT (Content, Status, User_max, Course_id, Owner_id)
-    #         Values (%s, 'Ongoing', %s, %s, %s);
-    #         Set @newID = last_insert_id();
-    #         Insert Into STUDY_EVENT_PERIOD (Event_date, Event_period, Classroom_id, Event_id)
-    #         Values (%s, %s, %s, @newID);
-    #         """
-    # # print(cmd)
-
-    # for hour in range(event_duration):
-    #     cur.execute(cmd, [content, user_max, course_id, user_id, 
-    #                       event_date, event_period_start + hour, classroom_id])
 
     event_id = cur.fetchone()[0]
     db.commit()
@@ -249,17 +207,21 @@ def find_course(instructor_name, course_name):
             From "COURSE"
             Where 
             """
-    
-    if instructor_name != "None" and course_name != "None":
-        query = query + f"Instructor_name Like '%{instructor_name}%' And Course_name Like '%{course_name}%';"
-    elif instructor_name != "None":
-       query = query + f"Instructor_name Like '%{instructor_name}%';" 
-    elif course_name != "None":
-       query = query + f"Course_name Like '%{course_name}%';" 
-    else:
+    count = 0
+    if instructor_name != "None":
+        count += 1
+        query += f"Instructor_name Like '%{instructor_name}%'"
+    if course_name != "None":
+        if count > 0:
+            query += ' And '
+        count += 1
+        query += f"Course_name Like '%{course_name}%'"
+    query += ';'
+        
+    if count == 0: # All argument is "None" (No keyword for search)
         return "Instructor_name and Course_name cannot be both empty."
     
-    print(cur.mogrify(query))
+    # print(cur.mogrify(query))
     cur.execute(query)
 
     return print_table(cur)
@@ -272,7 +234,7 @@ def find_reserved_room_on_date(event_date):
             Join "CLASSROOM" As c On sep.Classroom_id = c.Classroom_id
             Where sep.Event_date = %s;
             """
-    print(cur.mogrify(query, [event_date]))
+    # print(cur.mogrify(query, [event_date]))
     cur.execute(query, [event_date])
     return print_table(cur)
 
@@ -350,7 +312,7 @@ def search_classroom(building_name, capacity_size, floor_number, room_name):
     if count == 0: # All argument is "None" (No keyword for search)
         return "Search column cannot be all empty."
     
-    print(cur.mogrify(query))
+    # print(cur.mogrify(query))
     cur.execute(query)
 
     return print_table(cur)

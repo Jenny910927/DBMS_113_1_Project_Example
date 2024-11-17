@@ -1,14 +1,9 @@
 from ..Action import Action
-from DB_utils import classroom_exist, search_classroom
+from DB_utils import search_classroom
 
 class SearchClassroom(Action):
     def exec(self, conn, user):
-        # classroom_id = self.read_input(conn, "classroom id")
 
-        # if not classroom_exist(classroom_id):
-        #     conn.send(f'\nClassroom does not exist!\n'.encode('utf-8'))
-        #     return
-        
         conn.send(" (enter None if don't want to search based on item)\n".encode('utf-8'))
         building_name = self.read_input(conn, "building name")
         capacity_size = self.read_input(conn, "capacity size")

@@ -14,8 +14,6 @@ class ModifyUserInfo(Action):
 
         if user.isAdmin: # Admin can modify any user's info
             userid = self.read_input(conn, "userid that you want to change")
-            # userid = self.read_userinfo(conn, "userid")
-            # print(f'Read userid: {userid}')
 
             while not userid.isdigit():
                 conn.send("Input is not numeric, ".encode('utf-8'))
