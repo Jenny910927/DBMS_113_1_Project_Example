@@ -1,7 +1,7 @@
 import sys
 import psycopg2
-import pandas as pd
 from tabulate import tabulate
+from threading import Lock
 
 DB_NAME = "STUDY_GROUP_NEW"
 DB_USER = "DBTA"
@@ -10,6 +10,7 @@ DB_PORT = 5432
 
 cur = None
 db = None
+create_event_lock = Lock()
 
 def db_connect():
     exit_code = 0
@@ -152,9 +153,14 @@ def update_user_info(userid, item, new_value):
     db.commit()
     return
 
+def check_available(event_date, event_period_start, event_duration, classroom_id):
+    pass #TODO
+
 def create_study_group(content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id):
     
+    create_event_lock.acquire()
+
     query = "select Create_Study_Group(%s, %s, %s, %s, %s, %s, %s, %s);"
     cur.execute(query, [content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id])
@@ -173,6 +179,8 @@ def create_study_group(content, user_max, course_id, user_id,
 
     event_id = cur.fetchone()[0]
     db.commit()
+
+    create_event_lock.release()
 
     return event_id
 
