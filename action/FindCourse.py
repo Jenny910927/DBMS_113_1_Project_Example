@@ -1,7 +1,7 @@
 from .Action import Action
 from DB_utils import find_course
 class FindCourse(Action):
-     def exec(self, conn, user):
+    def exec(self, conn, user):
         print("Find Course")
         conn.send(" (enter None if don't want to search based on the item)\n".encode('utf-8'))
         instructor_name = self.read_input(conn, "instructor name")
