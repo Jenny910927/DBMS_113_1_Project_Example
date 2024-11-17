@@ -13,7 +13,10 @@ from action.ListHistory import ListHistory
 from action.FindCourse import FindCourse
 from action.FindReserved import FindReserved
 from action.ModifyUserInfo import ModifyUserInfo
+
 from action.classroom_management.ManageClassroom import ManageClassroom
+from action.ListUserInfo import ListUserInfo
+
 
 from role.User import User
 
@@ -35,7 +38,7 @@ user_action = [
     ListHistory("List Study Group History"),
     FindCourse("Find Course"),
     FindReserved("Find Reserved Classroom"),
-    ModifyUserInfo("Modify User Info"),
+    ModifyUserInfo("Modify User Information"),
     Logout("Logout"),
     Exit("Leave System")
 ]
@@ -44,7 +47,8 @@ user_action = [
 # ]
 
 admin_action = user_action + [
-    ManageClassroom("Add/Remove/Modify Classroom")
+    ManageClassroom("Add/Remove/Modify Classroom"),
+    ListUserInfo("List User Information"),
 ]
 
 # user_action_dict = {

@@ -38,7 +38,7 @@ def db_connect():
     sys.exit(exit_code)
     
 
-def fetch_data(cur, cmd):
+# def fetch_data(cur, cmd):
     if cmd == "test":
         cur.execute('select count(*) from "USER";')
 
@@ -355,14 +355,15 @@ def search_classroom(building_name, capacity_size, floor_number, room_name):
 
     return print_table(cur)
 
-def list_user_info(cur, user_id):
+def list_user_info(user_id):
     cmd =   """
             Select *
             From "USER"
             Where User_id = %s;
             """
-    return # TODO
     cur.execute(cmd, [user_id])
+    return print_table(cur)
+
 
 def list_course_info(cur, course_name):
     cmd =   """
