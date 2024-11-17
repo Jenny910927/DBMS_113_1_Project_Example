@@ -187,7 +187,7 @@ def create_study_group(content, user_max, course_id, user_id,
 
 def list_available_study_group() -> str:
     query = """
-            Select se.*
+            Select *
             From "STUDY_EVENT" As se
             Left Join "PARTICIPATION" As p On se.Event_id = p.Event_id
             Where se.Status = 'Ongoing'
@@ -232,7 +232,7 @@ def leave_study_group(user_id, event_id):
     
 def list_history(user_id):
     query = """
-            Select se.*
+            Select *
             From "PARTICIPATION" As p
             Join "STUDY_EVENT" As se On p.Event_id = se.Event_id
             Where p.User_id = %s;
@@ -365,15 +365,15 @@ def list_user_info(user_id):
     return print_table(cur)
 
 
-def list_course_info(cur, course_name):
-    cmd =   """
-            Select se.*
+def search_study_event(course_name):
+    query = f"""
+            Select *
             From "STUDY_EVENT" As se
             Join "COURSE" As c On se.Course_id = c.Course_id
-            Where c.Course_name = %s;
+            Where c.Course_name Like '%{course_name}%';
             """
     
-    return # TODO
-    cur.execute(cmd, [course_name])
+    cur.execute(query)
 
+    return print_table(cur)
 

@@ -16,6 +16,7 @@ from action.ModifyUserInfo import ModifyUserInfo
 
 from action.classroom_management.ManageClassroom import ManageClassroom
 from action.ListUserInfo import ListUserInfo
+from action.SearchEvent import SearchEvent
 
 
 from role.User import User
@@ -49,6 +50,7 @@ user_action = [
 admin_action = user_action + [
     ManageClassroom("Add/Remove/Modify Classroom"),
     ListUserInfo("List User Information"),
+    SearchEvent("Search Study Event")
 ]
 
 # user_action_dict = {
