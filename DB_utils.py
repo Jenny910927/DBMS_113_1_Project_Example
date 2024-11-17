@@ -279,14 +279,18 @@ def find_reserved_room_on_date(event_date):
 
 
 # ============================= function for Admin =============================
-def append_classroom(cur, building_name, capacity_size, floor_number, room_name):
-    cmd =   """
-            Insert Into "CLASSROOM" (%s, %s, %s, %s)
-            Values ('共同', 120, 3, '312');
+def append_classroom(building_name, capacity_size, floor_number, room_name):
+    query = """
+            Insert Into "CLASSROOM" (Building_name, Capacity_size, Floor_number, Room_name)
+            Values (%s, %s, %s, %s)
+            RETURNING Classroom_id;
             """
-    return # TODO
-    cur.execute(cmd, [building_name, capacity_size, floor_number, room_name])
+    
+    print(cur.mogrify(query, [building_name, capacity_size, floor_number, room_name]))
+    cur.execute(query, [building_name, capacity_size, floor_number, room_name])
+    classrooom_id = cur.fetchone()[0]
     db.commit()
+    return classrooom_id
 
 def remove_classroom(cur, classroom_id):
     cmd =   """

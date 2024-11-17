@@ -13,6 +13,7 @@ from action.ListHistory import ListHistory
 from action.FindCourse import FindCourse
 from action.FindReserved import FindReserved
 from action.ModifyUserInfo import ModifyUserInfo
+from action.classroom_management.ManageClassroom import ManageClassroom
 
 from role.User import User
 
@@ -37,6 +38,13 @@ user_action = [
     ModifyUserInfo("Modify User Info"),
     Logout("Logout"),
     Exit("Leave System")
+]
+# admin_action = [
+#     ManageClassroom("Create/Remove/Modify Classroom")
+# ]
+
+admin_action = user_action + [
+    ManageClassroom("Create/Remove/Modify Classroom")
 ]
 
 # user_action_dict = {
@@ -79,8 +87,11 @@ def handle_connection(conn, client_addr):
                 # conn.send(f'----------------------------------------\nHi {user.get_username()}!\n'.encode('utf-8'))
                 # conn.send(f'User Info | userid: {user.get_userid()}, username: {user.get_username()}, email: {user.get_email()}\n'.encode('utf-8'))
                 conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
-                conn.send(f'[INPUT]Please select your option:\n{list_option(user_action)}---> '.encode('utf-8'))
-                action = get_selection(conn, user_action)
+                # print(f'isAdmin? {user.check_isAdmin()}')
+                actions = admin_action if user.check_isAdmin() else user_action
+                # print(actions)
+                conn.send(f'[INPUT]Please select your option:\n{list_option(actions)}---> '.encode('utf-8'))
+                action = get_selection(conn, actions)
                 ret = action.exec(conn, user)
                 if ret == -1:
                     break

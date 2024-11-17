@@ -33,6 +33,8 @@ class User(Role):
         return self.userid
     def get_email(self):
         return self.email
+    def check_isAdmin(self):
+        return self.isAdmin
     
 
     def list_action(self):
