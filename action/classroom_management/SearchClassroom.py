@@ -16,7 +16,4 @@ class SearchClassroom(Action):
         conn.send(table.encode('utf-8'))
         conn.send('\n'.encode('utf-8'))
     
-
-        
-
         conn.send(f'\nRemove classroom successfully!\n'.encode('utf-8'))

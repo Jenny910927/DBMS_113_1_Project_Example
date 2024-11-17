@@ -5,7 +5,7 @@ class JoinEvent(Action):
         print("Join Event")
             
         event_id = self.read_input(conn, "study event id")
-        join_time = self.read_input(conn, "join time (in YYYY-MM-DD HH-MI-SS format)")
+        join_time = self.read_input(conn, "join time (in YYYY-MM-DD HH:MI:SS format)")
 
         join_study_group(user.get_userid(), event_id, join_time)
 

@@ -123,15 +123,42 @@ def update_user_info(userid, item, new_value):
     db.commit()
     return
 
-def check_available(event_date, event_period_start, event_duration, classroom_id):
-    pass #TODO
+def isReserved(event_date, event_period_start, event_duration, classroom_id):
+    query = f"""
+            Select
+            Case
+                When Exists
+                (
+                    Select *
+                    From "STUDY_EVENT_PERIOD" As sep
+                    Where sep.Classroom_id = %s
+                    And sep.Event_date = %s
+                    And sep.Event_period >= %s
+                    And sep.Event_period <= %s
+                )
+                Then 1
+                Else 0
+            End
+            """
+    # print(cur.mogrify(query, [classroom_id, event_date]))
+    # cur.execute(query, [classroom_id, event_date])
+    print(cur.mogrify(query, [classroom_id, event_date, event_period_start, int(event_period_start)+int(event_duration)]))
+    cur.execute(query, [classroom_id, event_date, event_period_start, int(event_period_start)+int(event_duration)])
+    return cur.fetchone()[0] > 0
 
 def create_study_group(content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id):
     
     create_event_lock.acquire()
 
+    if isReserved(event_date, event_period_start, event_duration, classroom_id):
+        return -1
+    
+    print("Is Available!!!")
+
     query = "select Create_Study_Group(%s, %s, %s, %s, %s, %s, %s, %s);"
+    print(cur.mogrify(query, [content, user_max, course_id, user_id, 
+                       event_date, event_period_start, event_duration, classroom_id]))
     cur.execute(query, [content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id])
 
