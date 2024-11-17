@@ -172,7 +172,7 @@ def create_study_group(content, user_max, course_id, user_id,
 
 def list_available_study_group() -> str:
     query = """
-            Select *
+            Select se.*
             From "STUDY_EVENT" As se
             Left Join "PARTICIPATION" As p On se.Event_id = p.Event_id
             Where se.Status = 'Ongoing'

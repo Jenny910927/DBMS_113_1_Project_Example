@@ -26,3 +26,5 @@ class CreateEvent(Action):
             conn.send(f'\nCreat study group fail :(  This time is not available.\n'.encode('utf-8'))
         else:
             conn.send(f'\nCreat study group successfully! Event id: {event_id}\n'.encode('utf-8'))
+            
+
