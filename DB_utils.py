@@ -292,13 +292,22 @@ def append_classroom(building_name, capacity_size, floor_number, room_name):
     db.commit()
     return classrooom_id
 
-def remove_classroom(cur, classroom_id):
-    cmd =   """
+def classroom_exist(classroom_id):
+    query = """
+            Select count(*)
+            From "CLASSROOM"
+            Where Classroom_id = %s;
+            """
+    cur.execute(query, [classroom_id])
+    return cur.fetchone()[0] > 0
+
+def remove_classroom(classroom_id):
+    query = """
             Delete From "CLASSROOM"
             Where Classroom_id = %s;
             """
-    return # TODO
-    cur.execute(cmd, [classroom_id])
+    
+    cur.execute(query, [classroom_id])
     db.commit()
 
 def update_classroom(cur, classroom_id, capacity_size):

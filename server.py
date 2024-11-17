@@ -44,7 +44,7 @@ user_action = [
 # ]
 
 admin_action = user_action + [
-    ManageClassroom("Create/Remove/Modify Classroom")
+    ManageClassroom("Add/Remove/Modify Classroom")
 ]
 
 # user_action_dict = {
