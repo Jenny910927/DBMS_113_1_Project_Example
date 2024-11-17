@@ -2,12 +2,14 @@ from ..Action import Action
 from utils import list_option, get_selection
 from .AddClassroom import AddClassroom
 from .RemoveClassroom import RemoveClassroom
+from .ModifyClassroom import ModifyClassroom
 class ManageClassroom(Action):
     def __init__(self, action_name):
         super().__init__(action_name)
         self.options = [AddClassroom("Add Classroom"),
                         RemoveClassroom("Remove Classroom"), 
-                        # "Modify Classroom", "SearchClassroom"
+                        ModifyClassroom("Modify Classroom"), 
+                        # "SearchClassroom"
                         ]
 
     def exec(self, conn, user):

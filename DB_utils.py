@@ -286,7 +286,7 @@ def append_classroom(building_name, capacity_size, floor_number, room_name):
             RETURNING Classroom_id;
             """
     
-    print(cur.mogrify(query, [building_name, capacity_size, floor_number, room_name]))
+    # print(cur.mogrify(query, [building_name, capacity_size, floor_number, room_name]))
     cur.execute(query, [building_name, capacity_size, floor_number, room_name])
     classrooom_id = cur.fetchone()[0]
     db.commit()
@@ -310,14 +310,14 @@ def remove_classroom(classroom_id):
     cur.execute(query, [classroom_id])
     db.commit()
 
-def update_classroom(cur, classroom_id, capacity_size):
-    cmd =   """
+def update_classroom(classroom_id, item, new_value):
+    query = f"""
             Update "CLASSROOM"
-            Set Capacity_size = %s
+            Set {item} = %s
             Where Classroom_id = %s;
             """
-    return # TODO
-    cur.execute(cmd, [classroom_id, capacity_size])
+    
+    cur.execute(query, [new_value, classroom_id])
     db.commit()
 
 def list_classroom(cur, building_name):
