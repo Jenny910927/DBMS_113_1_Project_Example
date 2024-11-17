@@ -3,7 +3,7 @@ import psycopg2
 import pandas as pd
 from tabulate import tabulate
 
-DB_NAME = "STUDY_GROUP"
+DB_NAME = "STUDY_GROUP_NEW"
 DB_USER = "DBTA"
 DB_HOST = "127.0.0.1"
 DB_PORT = 5432
@@ -22,6 +22,7 @@ def db_connect():
         print("Successfully connect to DBMS.")
         global cur
         cur = db.cursor()
+        # fetch_data(cur, "test")
         return db
         
     except psycopg2.Error as err:
@@ -38,14 +39,14 @@ def db_connect():
 
 def fetch_data(cur, cmd):
     if cmd == "test":
-        cur.execute('select * from test;')
+        cur.execute('select count(*) from "USER";')
 
         for tup in cur.fetchall():
             print(f'fetch: {tup}')
     if cmd == "login":
         cmd =   """
             select * 
-            from Users u
+            from "USER" u
             join user_role r on u.User_id = r.User_id
             where u.User_id = %s;
             """
@@ -66,7 +67,7 @@ def print_table(cur):
 def db_register_user(username, pwd, email):
     # print(f'db_register_user | ')
     cmd =   """
-            insert into Users (User_name, Password, Email) values (%s, %s, %s)
+            insert into "USER" (User_name, Password, Email) values (%s, %s, %s)
             RETURNING User_id;
             """
     cur.execute(cmd, [username, pwd, email])
@@ -74,7 +75,7 @@ def db_register_user(username, pwd, email):
     # print(f'Generate userid: {userid}')
 
     cmd =   """
-            insert into User_Role (User_id, Role) VALUES (%s, 'User');
+            insert into "USER_ROLE" (User_id, Role) VALUES (%s, 'User');
             """
     cur.execute(cmd, [userid])
     db.commit()
@@ -85,8 +86,8 @@ def db_register_user(username, pwd, email):
 def fetch_user(userid): 
     cmd =   """
             select * 
-            from Users u
-            join user_role r on u.User_id = r.User_id
+            from "USER" u
+            join "USER_ROLE" r on u.User_id = r.User_id
             where u.User_id = %s;
             """
     cur.execute(cmd, [userid])
@@ -98,7 +99,7 @@ def fetch_user(userid):
         isUser = False
         isAdmin = False
         for row in rows:
-            userid, username, pwd, email, userid, role = row  #TODO: remove second userid
+            userid, username, pwd, email, userid, role = row
             
             if role == 'User':
                 isUser = True
@@ -108,13 +109,15 @@ def fetch_user(userid):
     return username, pwd, email, isUser, isAdmin
 
 def username_exist(username):
+    
     # print(f'username_exist | Enter')
     cmd =   """
-            select count(*) 
-            from Users
+            select count(*) from "USER"
             where User_name = %s;
             """
+    print(cur.mogrify(cmd, [username]))
     cur.execute(cmd, [username])
+
     # print(f'username_exist | After exec')
 
 
@@ -125,7 +128,7 @@ def username_exist(username):
 def userid_exist(userid):
     cmd =   """
             select count(*) 
-            from Users
+            from "USER"
             where User_id = %s;
             """
     cur.execute(cmd, [userid])
@@ -138,7 +141,7 @@ def userid_exist(userid):
 # ============================= function for User =============================
 def update_user_info(userid, item, new_value):
     cmd =  f"""
-            update Users
+            update "USER"
             set {item} = %s
             where User_id = %s;
             """
@@ -177,13 +180,13 @@ def create_study_group(content, user_max, course_id, user_id,
 def list_available_study_group() -> str:
     query = """
             Select se.*
-            From STUDY_EVENT As se
-            Left Join PARTICIPATION As p On se.Event_id = p.Event_id
+            From "STUDY_EVENT" As se
+            Left Join "PARTICIPATION" As p On se.Event_id = p.Event_id
             Where se.Status = 'Ongoing'
             Group By se.Event_id
             Having Count(p.User_id) < (
                 Select User_max
-                From STUDY_EVENT AS se2
+                From "STUDY_EVENT" AS se2
                 Where se.Event_id = se2.Event_id
             );
             """
@@ -194,7 +197,7 @@ def list_available_study_group() -> str:
 
 def join_study_group(user_id, event_id, join_time):
     query = """
-            Insert Into PARTICIPATION (User_id, Event_id, Join_Time)
+            Insert Into "PARTICIPATION" (User_id, Event_id, Join_Time)
             Values (%s, %s, %s);
             """
     cur.execute(query, [user_id, event_id, join_time])
@@ -204,7 +207,7 @@ def join_study_group(user_id, event_id, join_time):
 def isInEvent(user_id, event_id):
     query = """
             Select count(*)
-            From PARTICIPATION
+            From "PARTICIPATION"
             Where Event_id = %s And User_id = %s;
             """
     cur.execute(query, [event_id, user_id])
@@ -213,7 +216,7 @@ def isInEvent(user_id, event_id):
 
 def leave_study_group(user_id, event_id):
     query = """
-            Delete From PARTICIPATION
+            Delete From "PARTICIPATION"
             Where Event_id = %s And User_id = %s;
             """
     cur.execute(query, [event_id, user_id])
@@ -222,8 +225,8 @@ def leave_study_group(user_id, event_id):
 def list_history(user_id):
     query = """
             Select se.*
-            From PARTICIPATION As p
-            Join STUDY_EVENT As se On p.Event_id = se.Event_id
+            From "PARTICIPATION" As p
+            Join "STUDY_EVENT" As se On p.Event_id = se.Event_id
             Where p.User_id = %s;
             """
     cur.execute(query, [user_id])
@@ -234,7 +237,7 @@ def list_history(user_id):
 def find_course(cur, instructor_name, course_name):
     cmd =   """
             Select *
-            From COURSE
+            From "COURSE"
             Where Instructor_name Like '%%s%'
             Or Course_name Like '%%s';
             """
@@ -248,8 +251,8 @@ def find_course(cur, instructor_name, course_name):
 def find_reserved_room_on_date(cur, event_date):
     cmd =   """
             Select c.Room_name, sep.Event_period
-            From STUDY_EVENT_PERIOD As sep
-            Join Classroom As c On sep.Classroom_id = c.Classroom_id
+            From "STUDY_EVENT_PERIOD" As sep
+            Join "CLASSROOM" As c On sep.Classroom_id = c.Classroom_id
             Where sep.Event_date = '%s;
             """
     return # TODO
@@ -262,7 +265,7 @@ def find_reserved_room_on_date(cur, event_date):
 # ============================= function for Admin =============================
 def append_classroom(cur, building_name, capacity_size, floor_number, room_name):
     cmd =   """
-            Insert Into CLASSROOM(%s, %s, %s, %s)
+            Insert Into "CLASSROOM" (%s, %s, %s, %s)
             Values ('共同', 120, 3, '312');
             """
     return # TODO
@@ -271,7 +274,7 @@ def append_classroom(cur, building_name, capacity_size, floor_number, room_name)
 
 def remove_classroom(cur, classroom_id):
     cmd =   """
-            Delete From CLASSROOM
+            Delete From "CLASSROOM"
             Where Classroom_id = %s;
             """
     return # TODO
@@ -280,7 +283,7 @@ def remove_classroom(cur, classroom_id):
 
 def update_classroom(cur, classroom_id, capacity_size):
     cmd =   """
-            Update CLASSROOM
+            Update "CLASSROOM"
             Set Capacity_size = %s
             Where Classroom_id = %s;
             """
@@ -291,7 +294,7 @@ def update_classroom(cur, classroom_id, capacity_size):
 def list_classroom(cur, building_name):
     cmd =   """
             Select *
-            From CLASSROOM
+            From "CLASSROOM"
             Where Building_name = %s;
             """
     return # TODO
@@ -301,7 +304,7 @@ def list_classroom(cur, building_name):
 def list_user_info(cur, user_id):
     cmd =   """
             Select *
-            From USER
+            From "USER"
             Where User_id = %s;
             """
     return # TODO
@@ -310,8 +313,8 @@ def list_user_info(cur, user_id):
 def list_course_info(cur, course_name):
     cmd =   """
             Select se.*
-            From STUDY_EVENT As se
-            Join COURSE As c On se.Course_id = c.Course_id
+            From "STUDY_EVENT" As se
+            Join "COURSE" As c On se.Course_id = c.Course_id
             Where c.Course_name = %s;
             """
     
