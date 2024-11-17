@@ -36,5 +36,5 @@ class ModifyUserInfo(Action):
 
 
         update_user_info(userid, item, new_value)
-        conn.send(f'Update successfully! New {item}: {new_value}\n'.encode('utf-8'))
+        conn.send(f'\nUpdate successfully! New {item}: {new_value}\n'.encode('utf-8'))
         

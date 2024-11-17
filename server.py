@@ -19,24 +19,39 @@ from role.User import User
 from DB_utils import *
 from utils import *
 
-welcome_action_dict = {
-    '1': LogIn("Log-in"),
-    '2': SignUp("Sign-up"),
-    '3': Exit("Leave System")
-}
+# welcome_action_dict = {
+#     '1': LogIn("Log-in"),
+#     '2': SignUp("Sign-up"),
+#     '3': Exit("Leave System")
+# }
 
-user_action_dict = {
-    '1': CreateEvent("Create Study Event"),
-    '2': ListEvent("List All Available Study Events"),
-    '3': JoinEvent("Join Study Event"),
-    '4': LeaveEvent("Leave Study Event"),
-    '5': ListHistory("List Study Group History"),
-    '6': FindCourse("Find Course"),
-    '7': FindReserved("Find Reserved Classroom"),
-    '8': ModifyUserInfo("Modify User Info"),
-    '9': Logout("Logout"),
-    '10': Exit("Leave System")
-}
+welcome_action = [LogIn("Log-in"), SignUp("Sign-up"), Exit("Leave System")]
+user_action = [
+    CreateEvent("Create Study Event"),
+    ListEvent("List All Available Study Events"),
+    JoinEvent("Join Study Event"),
+    LeaveEvent("Leave Study Event"),
+    ListHistory("List Study Group History"),
+    FindCourse("Find Course"),
+    FindReserved("Find Reserved Classroom"),
+    ModifyUserInfo("Modify User Info"),
+    Logout("Logout"),
+    Exit("Leave System")
+]
+
+# user_action_dict = {
+#     '1': CreateEvent("Create Study Event"),
+#     '2': ListEvent("List All Available Study Events"),
+#     '3': JoinEvent("Join Study Event"),
+#     '4': LeaveEvent("Leave Study Event"),
+#     '5': ListHistory("List Study Group History"),
+#     '6': FindCourse("Find Course"),
+#     '7': FindReserved("Find Reserved Classroom"),
+#     '8': ModifyUserInfo("Modify User Info"),
+#     '9': Logout("Logout"),
+#     '10': Exit("Leave System")
+# }
+
 
 
 
@@ -45,11 +60,11 @@ def handle_connection(conn, client_addr):
         
         while True: # Welcome Page
             conn.send("----------------------------------------\nWelcome to Study Group System! Please select your option:\n".encode('utf-8'))
-            conn.send(f'[INPUT]Please select your option:\n{list_option(welcome_action_dict)}---> '.encode('utf-8'))
+            conn.send(f'[INPUT]Please select your option:\n{list_option(welcome_action)}---> '.encode('utf-8'))
             
             # conn.send(msg.encode('utf-8'))
                 
-            action = get_selection(conn, welcome_action_dict)
+            action = get_selection(conn, welcome_action)
             
             user = action.exec(conn)
             if user == -1:
@@ -64,8 +79,8 @@ def handle_connection(conn, client_addr):
                 # conn.send(f'----------------------------------------\nHi {user.get_username()}!\n'.encode('utf-8'))
                 # conn.send(f'User Info | userid: {user.get_userid()}, username: {user.get_username()}, email: {user.get_email()}\n'.encode('utf-8'))
                 conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
-                conn.send(f'[INPUT]Please select your option:\n{list_option(user_action_dict)}---> '.encode('utf-8'))
-                action = get_selection(conn, user_action_dict)
+                conn.send(f'[INPUT]Please select your option:\n{list_option(user_action)}---> '.encode('utf-8'))
+                action = get_selection(conn, user_action)
                 ret = action.exec(conn, user)
                 if ret == -1:
                     break

@@ -20,12 +20,13 @@ class User(Role):
             # '5': Logout("Logout"),
             '6': Exit("Leave System")
         }
-        print(f'Create user | userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}')
+        self.role = 'Admin' if isAdmin else 'User'
+        print(f'Create user | userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}, role: {self.role}')
 
     def get_info_msg_no_pwd(self):
-        return f'userid: {self.userid}, username: {self.username}, email: {self.email}'
+        return f'userid: {self.userid}, username: {self.username}, email: {self.email}, role: {self.role}'
     def get_info_msg(self):
-        return f'userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}'
+        return f'userid: {self.userid}, username: {self.username}, pwd: {self.pwd}, email: {self.email}, role: {self.role}'
     def get_username(self):
         return self.username
     def get_userid(self):
