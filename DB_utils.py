@@ -201,6 +201,15 @@ def join_study_group(user_id, event_id, join_time):
     db.commit()
     return
     
+def isInEvent(user_id, event_id):
+    query = """
+            Select count(*)
+            From PARTICIPATION
+            Where Event_id = %s And User_id = %s;
+            """
+    cur.execute(query, [event_id, user_id])
+    return cur.fetchone()[0] > 0
+
 
 def leave_study_group(user_id, event_id):
     query = """
