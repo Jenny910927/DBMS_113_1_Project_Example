@@ -242,31 +242,39 @@ def list_history(user_id):
     return print_table(cur)
 
 
-def find_course(cur, instructor_name, course_name):
-    cmd =   """
+def find_course(instructor_name, course_name):
+    
+    query = f"""
             Select *
             From "COURSE"
-            Where Instructor_name Like '%%s%'
-            Or Course_name Like '%%s';
+            Where 
             """
-    return # TODO
-    cur.execute(cmd, [instructor_name, course_name])
+    
+    if instructor_name != "None" and course_name != "None":
+        query = query + f"Instructor_name Like '%{instructor_name}%' And Course_name Like '%{course_name}%';"
+    elif instructor_name != "None":
+       query = query + f"Instructor_name Like '%{instructor_name}%';" 
+    elif course_name != "None":
+       query = query + f"Course_name Like '%{course_name}%';" 
+    else:
+        return "Instructor_name and Course_name cannot be both empty."
+    
+    print(cur.mogrify(query))
+    cur.execute(query)
 
-    # TODO: return or send fetch result 
-    pass
+    return print_table(cur)
 
 
-def find_reserved_room_on_date(cur, event_date):
-    cmd =   """
+def find_reserved_room_on_date(event_date):
+    query =   """
             Select c.Room_name, sep.Event_period
             From "STUDY_EVENT_PERIOD" As sep
             Join "CLASSROOM" As c On sep.Classroom_id = c.Classroom_id
-            Where sep.Event_date = '%s;
+            Where sep.Event_date = %s;
             """
-    return # TODO
-    cur.execute(cmd, [event_date])
-    # TODO: return or send fetch result 
-    pass
+    print(cur.mogrify(query, [event_date]))
+    cur.execute(query, [event_date])
+    return print_table(cur)
 
 
 
