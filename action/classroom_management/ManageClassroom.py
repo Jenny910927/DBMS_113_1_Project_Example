@@ -22,8 +22,6 @@ class ManageClassroom(Action):
     
 
         action = get_selection(conn, self.options)
-        action.exec(conn, user)
+        action.exec(conn)
 
-        
-        # conn.send(f'\nUpdate successfully! New {item}: {new_value}\n'.encode('utf-8'))
         

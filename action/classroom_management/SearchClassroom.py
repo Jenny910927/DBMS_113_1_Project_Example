@@ -2,7 +2,7 @@ from ..Action import Action
 from DB_utils import search_classroom
 
 class SearchClassroom(Action):
-    def exec(self, conn, user):
+    def exec(self, conn):
 
         conn.send(" (enter None if don't want to search based on item)\n".encode('utf-8'))
         building_name = self.read_input(conn, "building name")

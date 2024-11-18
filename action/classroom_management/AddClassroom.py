@@ -2,7 +2,7 @@ from ..Action import Action
 from DB_utils import append_classroom
 
 class AddClassroom(Action):
-    def exec(self, conn, user):
+    def exec(self, conn):
         building_name = self.read_input(conn, "building name for new classroom")
         capacity_size = self.read_input(conn, "capacity size")
         floor_number = self.read_input(conn, "floor number")
