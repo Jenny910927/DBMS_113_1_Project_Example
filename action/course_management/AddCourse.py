@@ -1,5 +1,5 @@
 from ..Action import Action
-from DB_utils import append_course
+from DB_utils import append_course, course_exist
 
 class AddCourse(Action):
     def exec(self, conn):

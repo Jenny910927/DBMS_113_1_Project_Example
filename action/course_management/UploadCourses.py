@@ -1,5 +1,5 @@
 from ..Action import Action
-from DB_utils import append_classroom
+from DB_utils import upload_courses
 from tabulate import tabulate
 import pandas as pd
 
@@ -22,7 +22,6 @@ class UploadCourses(Action):
                 break
             data += packet
         
-        # csv_data = io.BytesIO(data)
 
         with open('receive_course.csv', 'wb') as f:
                 f.write(data)
@@ -31,14 +30,9 @@ class UploadCourses(Action):
 
         df_csv = pd.read_csv('receive_course.csv', encoding='Big5')
         print(f'Finish read csv to df')
-        # print(df_csv)
 
 
-        df_csv = df_csv.loc[:, ["流水號", "課程名稱", "授課教師", "授課對象", "時間"]]
-
-        print(tabulate(df_csv, headers = 'keys', tablefmt = 'psql'))
+        ret_msg = upload_courses(df_csv.loc[:, ["課程名稱", "授課教師", "授課對象", "時間"]])
 
 
-        # classrooom_id = append_classroom(building_name, capacity_size, floor_number, room_name)
-
-        # conn.send(f'\nCreate new classroom successfully! New Classrooom_id: {classrooom_id}\n'.encode('utf-8'))
+        conn.send(f'\n{ret_msg}\n'.encode('utf-8'))

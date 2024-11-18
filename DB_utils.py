@@ -277,9 +277,9 @@ def append_classroom(building_name, capacity_size, floor_number, room_name):
     
     # print(cur.mogrify(query, [building_name, capacity_size, floor_number, room_name]))
     cur.execute(query, [building_name, capacity_size, floor_number, room_name])
-    classrooom_id = cur.fetchone()[0]
+    classroom_id = cur.fetchone()[0]
     db.commit()
-    return classrooom_id
+    return classroom_id
 
 def classroom_exist(classroom_id):
     query = """
@@ -344,7 +344,7 @@ def search_classroom(building_name, capacity_size, floor_number, room_name):
 
     return print_table(cur)
 
-def append_course(course_name, instructor_name, department_name, lecture_time):
+def append_course(course_name, instructor_name, department_name, lecture_time, commit=True):
     query = """
             Insert Into "COURSE" (Course_name, Instructor_name, Department_name, Lecture_time)
             Values (%s, %s, %s, %s)
@@ -355,16 +355,39 @@ def append_course(course_name, instructor_name, department_name, lecture_time):
     cur.execute(query, [course_name, instructor_name, department_name, lecture_time])
     print(f'After exec')
     course_id = cur.fetchone()[0]
-    db.commit()
-    return course_id 
+    if commit:
+        db.commit()
+    return course_id
 
-def course_exist(classroom_id):
+def upload_courses(df):
+    print(tabulate(df, headers = 'keys', tablefmt = 'psql'))
+    try:
+        for idx, row in df.iterrows():
+            append_course(row["課程名稱"], row["授課教師"], row["授課對象"], row["時間"], commit=False)
+        db.commit()
+        return "Successfully append courses."
+    
+    except psycopg2.DatabaseError as error:
+        print(f'psycopg2 db error')
+        if db:
+            db.rollback()
+        return f"Database upload error. Rollback. Error: {error}"
+        
+    except Exception as error:
+        print(f'Error: {error}. Rollback.')
+        if db:
+            db.rollback()
+        return f"Rollback. Error: {error}"
+    
+
+
+def course_exist(course_id):
     query = """
             Select count(*)
-            From "CLASSROOM"
-            Where Classroom_id = %s;
+            From "COURSE"
+            Where Course_id = %s;
             """
-    cur.execute(query, [classroom_id])
+    cur.execute(query, [course_id])
     return cur.fetchone()[0] > 0
 
 
