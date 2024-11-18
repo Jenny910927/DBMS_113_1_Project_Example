@@ -24,5 +24,5 @@ class SignUp(Action):
         userid = db_register_user(username, pwd, email)
         conn.send(f'----------------------------------------\nSuccessfully create account! Userid = {userid}\n'.encode('utf-8'))
 
-        return User(userid, username, pwd, email, True, False)
+        return User(userid, username, pwd, email)
 

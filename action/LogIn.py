@@ -1,6 +1,7 @@
 
 from .Action import Action
 from role.User import User
+from role.Admin import Admin
 from DB_utils import fetch_user
 
 class LogIn(Action):
@@ -33,8 +34,10 @@ class LogIn(Action):
             conn.send(f'[EXIT]Connection close. Reason: Password incorrect.'.encode('utf-8'))
             return -1
         
-        
-        return User(userid, username, pwd, email, isUser, isAdmin)
+        if isUser:
 
+            return User(userid, username, pwd, email)
+        else:
+            return Admin(userid, username, pwd, email)
       
     

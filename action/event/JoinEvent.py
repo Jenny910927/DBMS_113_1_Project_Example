@@ -1,4 +1,4 @@
-from .Action import Action
+from ..Action import Action
 from datetime import datetime
 from DB_utils import join_study_group
 class JoinEvent(Action):
