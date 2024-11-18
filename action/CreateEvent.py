@@ -12,12 +12,19 @@ class CreateEvent(Action):
         event_period_start = self.read_input(conn, "event start time (between 8 to 21)")
         event_duration = self.read_input(conn, "event duration (min=1, max=3)")
 
-        if user is None:
-            print("NOOO USER!")
+
+        
+
         user_id = user.get_userid()
         print("User id =", user_id)
         
 
         event_id = create_study_group(content, user_max, course_id, user_id, 
                             event_date, event_period_start, event_duration, classroom_id)
-        conn.send(f'\nCreat study group successfully! Event id: {event_id}\n'.encode('utf-8'))
+        
+        if event_id == -1:
+            conn.send(f'\nCreate study group fail :(  This time is not available.\n'.encode('utf-8'))
+        else:
+            conn.send(f'\nCreate study group successfully! Event id: {event_id}\n'.encode('utf-8'))
+            
+

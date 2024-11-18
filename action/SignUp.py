@@ -1,27 +1,24 @@
-from .UserAuthenticate import UserAuthenticate
+
+from .Action import Action
 from role.User import User
 from DB_utils import db_register_user, username_exist
 
-class SignUp(UserAuthenticate):
+class SignUp(Action):
     def exec(self, conn):
         # print(f'Enter SignUp Action')
 
         # Read Username
-        username = self.read_userinfo(conn, "username")
+        username = self.read_input(conn, "username")
         while username_exist(username):
-            # conn.send("[INPUT]Username exist, please enter another username: ".encode('utf-8'))
             conn.send("Username exist, ".encode('utf-8'))
-            username = self.read_userinfo(conn, "another username")
+            username = self.read_input(conn, "another username")
         
         # Read Password
-        pwd = self.read_userinfo(conn, "password")
-        # TODO: double check pwd
-        # pwd2 = self.read_pwd(conn, confirm_pwd=True)
-        # if(pwd != pwd2):
+        pwd = self.read_input(conn, "password")
 
 
         # Read_email
-        email = self.read_userinfo(conn, "email")
+        email = self.read_input(conn, "email")
 
         # Add to DB
         userid = db_register_user(username, pwd, email)
