@@ -1,15 +1,16 @@
-from .UserAuthenticate import UserAuthenticate
+
+from .Action import Action
 from role.User import User
 from DB_utils import fetch_user
 
-class LogIn(UserAuthenticate):
+class LogIn(Action):
     def exec(self, conn):
-        userid = self.read_userinfo(conn, "userid")
+        userid = self.read_input(conn, "userid")
         print(f'Read userid: {userid}')
 
         while not userid.isdigit():
             conn.send("Input is not numeric, ".encode('utf-8'))
-            userid = self.read_userinfo(conn, "correct userid")
+            userid = self.read_input(conn, "correct userid")
 
 
         username, pwd, email, isUser, isAdmin = fetch_user(userid)
@@ -17,10 +18,10 @@ class LogIn(UserAuthenticate):
 
         while username is None:
             conn.send("Userid not exist, ".encode('utf-8'))
-            userid = self.read_userinfo(conn, "correct userid")
+            userid = self.read_input(conn, "correct userid")
             username, pwd, email, isUser, isAdmin = fetch_user(userid)
 
-        pwd_input = self.read_userinfo(conn, "password")
+        pwd_input = self.read_input(conn, "password")
         print(f'Read pwd: {pwd_input}')
         count = 2
         
