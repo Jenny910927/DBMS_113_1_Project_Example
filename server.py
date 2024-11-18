@@ -15,6 +15,7 @@ from action.FindReserved import FindReserved
 from action.ModifyUserInfo import ModifyUserInfo
 
 from action.classroom_management.ManageClassroom import ManageClassroom
+from action.course_management.ManageCourse import ManageCourse
 from action.ListUserInfo import ListUserInfo
 from action.SearchEvent import SearchEvent
 
@@ -40,7 +41,8 @@ user_action = [
 ]
 
 admin_action = user_action + [
-    ManageClassroom("Add/Remove/Modify Classroom"),
+    ManageClassroom("Add/Remove/Modify/Search Classroom"),
+    ManageCourse("Add/Upload/Remove/Modify/Search Course"),
     ListUserInfo("List User Information"),
     SearchEvent("Search Study Event")
 ]

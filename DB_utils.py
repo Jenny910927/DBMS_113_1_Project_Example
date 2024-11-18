@@ -344,6 +344,33 @@ def search_classroom(building_name, capacity_size, floor_number, room_name):
 
     return print_table(cur)
 
+def append_course(course_name, instructor_name, department_name, lecture_time):
+    query = """
+            Insert Into "COURSE" (Course_name, Instructor_name, Department_name, Lecture_time)
+            Values (%s, %s, %s, %s)
+            RETURNING Course_id;
+            """
+    
+    print(cur.mogrify(query, [course_name, instructor_name, department_name, lecture_time]))
+    cur.execute(query, [course_name, instructor_name, department_name, lecture_time])
+    print(f'After exec')
+    course_id = cur.fetchone()[0]
+    db.commit()
+    return course_id 
+
+def course_exist(classroom_id):
+    query = """
+            Select count(*)
+            From "CLASSROOM"
+            Where Classroom_id = %s;
+            """
+    cur.execute(query, [classroom_id])
+    return cur.fetchone()[0] > 0
+
+
+
+
+
 def list_user_info(user_id):
     cmd =   """
             Select *

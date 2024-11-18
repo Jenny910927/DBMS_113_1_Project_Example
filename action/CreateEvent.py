@@ -23,8 +23,8 @@ class CreateEvent(Action):
                             event_date, event_period_start, event_duration, classroom_id)
         
         if event_id == -1:
-            conn.send(f'\nCreat study group fail :(  This time is not available.\n'.encode('utf-8'))
+            conn.send(f'\nCreate study group fail :(  This time is not available.\n'.encode('utf-8'))
         else:
-            conn.send(f'\nCreat study group successfully! Event id: {event_id}\n'.encode('utf-8'))
+            conn.send(f'\nCreate study group successfully! Event id: {event_id}\n'.encode('utf-8'))
             
 
