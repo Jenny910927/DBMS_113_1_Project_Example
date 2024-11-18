@@ -378,8 +378,6 @@ def upload_courses(df):
         if db:
             db.rollback()
         return f"Rollback. Error: {error}"
-    
-
 
 def course_exist(course_id):
     query = """
@@ -390,8 +388,24 @@ def course_exist(course_id):
     cur.execute(query, [course_id])
     return cur.fetchone()[0] > 0
 
+def remove_course(course_id):
+    query = """
+            Delete From "COURSE"
+            Where Course_id = %s;
+            """
+    
+    cur.execute(query, [course_id])
+    db.commit()
 
-
+def update_course(course_id, item, new_value):
+    query = f"""
+            Update "COURSE"
+            Set {item} = %s
+            Where Course_id = %s;
+            """
+    
+    cur.execute(query, [new_value, course_id])
+    db.commit()
 
 
 def list_user_info(user_id):
@@ -415,4 +429,3 @@ def search_study_event(course_name):
     cur.execute(query)
 
     return print_table(cur)
-
