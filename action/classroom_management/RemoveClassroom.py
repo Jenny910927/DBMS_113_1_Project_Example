@@ -2,7 +2,7 @@ from ..Action import Action
 from DB_utils import classroom_exist, remove_classroom
 
 class RemoveClassroom(Action):
-    def exec(self, conn, user):
+    def exec(self, conn):
         classroom_id = self.read_input(conn, "classroom id")
 
         if not classroom_exist(classroom_id):

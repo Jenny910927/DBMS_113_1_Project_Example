@@ -18,11 +18,9 @@ def db_connect():
         global db
         db = psycopg2.connect(database=DB_NAME, user=DB_USER, password='1234', 
                               host=DB_HOST, port=DB_PORT)
-        # exit_code = main(db)
         print("Successfully connect to DBMS.")
         global cur
         cur = db.cursor()
-        # fetch_data(cur, "test")
         return db
         
     except psycopg2.Error as err:
@@ -91,7 +89,7 @@ def username_exist(username):
             select count(*) from "USER"
             where User_name = %s;
             """
-    print(cur.mogrify(cmd, [username]))
+    # print(cur.mogrify(cmd, [username]))
     cur.execute(cmd, [username])
 
 
@@ -140,9 +138,8 @@ def isReserved(event_date, event_period_start, event_duration, classroom_id):
                 Else 0
             End
             """
-    # print(cur.mogrify(query, [classroom_id, event_date]))
-    # cur.execute(query, [classroom_id, event_date])
-    print(cur.mogrify(query, [classroom_id, event_date, event_period_start, int(event_period_start)+int(event_duration)]))
+
+    # print(cur.mogrify(query, [classroom_id, event_date, event_period_start, int(event_period_start)+int(event_duration)]))
     cur.execute(query, [classroom_id, event_date, event_period_start, int(event_period_start)+int(event_duration)])
     return cur.fetchone()[0] > 0
 
@@ -157,8 +154,8 @@ def create_study_group(content, user_max, course_id, user_id,
     print("Is Available!!!")
 
     query = "select Create_Study_Group(%s, %s, %s, %s, %s, %s, %s, %s);"
-    print(cur.mogrify(query, [content, user_max, course_id, user_id, 
-                       event_date, event_period_start, event_duration, classroom_id]))
+    # print(cur.mogrify(query, [content, user_max, course_id, user_id, 
+    #                    event_date, event_period_start, event_duration, classroom_id]))
     cur.execute(query, [content, user_max, course_id, user_id, 
                        event_date, event_period_start, event_duration, classroom_id])
 
@@ -351,7 +348,7 @@ def append_course(course_name, instructor_name, department_name, lecture_time, c
             RETURNING Course_id;
             """
     
-    print(cur.mogrify(query, [course_name, instructor_name, department_name, lecture_time]))
+    # print(cur.mogrify(query, [course_name, instructor_name, department_name, lecture_time]))
     cur.execute(query, [course_name, instructor_name, department_name, lecture_time])
     print(f'After exec')
     course_id = cur.fetchone()[0]
@@ -378,8 +375,6 @@ def upload_courses(df):
         if db:
             db.rollback()
         return f"Rollback. Error: {error}"
-    
-
 
 def course_exist(course_id):
     query = """
@@ -390,8 +385,24 @@ def course_exist(course_id):
     cur.execute(query, [course_id])
     return cur.fetchone()[0] > 0
 
+def remove_course(course_id):
+    query = """
+            Delete From "COURSE"
+            Where Course_id = %s;
+            """
+    
+    cur.execute(query, [course_id])
+    db.commit()
 
-
+def update_course(course_id, item, new_value):
+    query = f"""
+            Update "COURSE"
+            Set {item} = %s
+            Where Course_id = %s;
+            """
+    
+    cur.execute(query, [new_value, course_id])
+    db.commit()
 
 
 def list_user_info(user_id):
@@ -415,4 +426,3 @@ def search_study_event(course_name):
     cur.execute(query)
 
     return print_table(cur)
-

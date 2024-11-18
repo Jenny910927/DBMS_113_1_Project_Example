@@ -12,7 +12,7 @@ class ModifyUserInfo(Action):
 
         userid = user.get_userid()
 
-        if user.isAdmin: # Admin can modify any user's info
+        if user.isAdmin(): # Admin can modify any user's info
             userid = self.read_input(conn, "userid that you want to change")
 
             while not userid.isdigit():

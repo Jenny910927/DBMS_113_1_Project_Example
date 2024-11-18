@@ -7,7 +7,7 @@ class ModifyClassroom(Action):
         super().__init__(action_name)
         self.options = ["Building_name", "Floor_number", "Room_name", "Capacity_size"]
 
-    def exec(self, conn, user):
+    def exec(self, conn):
         classroom_id = self.read_input(conn, "classroom id")
 
         if not classroom_exist(classroom_id):

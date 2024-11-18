@@ -1,4 +1,4 @@
-from .Action import Action
+from ..Action import Action
 from DB_utils import search_study_event
 class SearchEvent(Action):
     def exec(self, conn, user):

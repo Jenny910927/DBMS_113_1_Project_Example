@@ -1,4 +1,4 @@
-from .Action import Action
+from ..Action import Action
 from DB_utils import create_study_group
 class CreateEvent(Action):
     

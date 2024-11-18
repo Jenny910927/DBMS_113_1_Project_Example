@@ -4,48 +4,13 @@ from threading import Thread
 from action.LogIn import LogIn
 from action.SignUp import SignUp
 from action.Exit import Exit
-from action.Logout import Logout
-from action.CreateEvent import CreateEvent
-from action.ListEvent import ListEvent
-from action.JoinEvent import JoinEvent
-from action.LeaveEvent import LeaveEvent
-from action.ListHistory import ListHistory
-from action.FindCourse import FindCourse
-from action.FindReserved import FindReserved
-from action.ModifyUserInfo import ModifyUserInfo
-
-from action.classroom_management.ManageClassroom import ManageClassroom
-from action.course_management.ManageCourse import ManageCourse
-from action.ListUserInfo import ListUserInfo
-from action.SearchEvent import SearchEvent
-
-
-from role.User import User
 
 from DB_utils import *
 from utils import *
 
 
 welcome_action = [LogIn("Log-in"), SignUp("Sign-up"), Exit("Leave System")]
-user_action = [
-    CreateEvent("Create Study Event"),
-    ListEvent("List All Available Study Events"),
-    JoinEvent("Join Study Event"),
-    LeaveEvent("Leave Study Event"),
-    ListHistory("List Study Group History"),
-    FindCourse("Find Course"),
-    FindReserved("Find Reserved Classroom"),
-    ModifyUserInfo("Modify User Information"),
-    Logout("Logout"),
-    Exit("Leave System")
-]
 
-admin_action = user_action + [
-    ManageClassroom("Add/Remove/Modify/Search Classroom"),
-    ManageCourse("Add/Upload/Remove/Modify/Search Course"),
-    ListUserInfo("List User Information"),
-    SearchEvent("Search Study Event")
-]
 
 def handle_connection(conn, client_addr):
     try:
@@ -67,7 +32,7 @@ def handle_connection(conn, client_addr):
             while True: # Function Page
                 
                 conn.send(f'\n----------------------------------------\n\n'.encode('utf-8'))
-                actions = admin_action if user.check_isAdmin() else user_action
+                actions = user.get_available_action()
                 conn.send(f'[INPUT]Please select your option:\n{list_option(actions)}---> '.encode('utf-8'))
                 action = get_selection(conn, actions)
                 ret = action.exec(conn, user)

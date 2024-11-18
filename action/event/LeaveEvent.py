@@ -1,4 +1,4 @@
-from .Action import Action
+from ..Action import Action
 from DB_utils import isInEvent, leave_study_group
 class LeaveEvent(Action):
     def exec(self, conn, user):
