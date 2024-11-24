@@ -7,8 +7,7 @@ class FindReserved(Action):
         event_date = self.read_input(conn, "event date (in YYYY-MM-DD format)")
         
         table = find_reserved_room_on_date(event_date)
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
+
+        self.send_table(conn, table)
 
         return 

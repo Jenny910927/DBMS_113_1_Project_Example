@@ -34,10 +34,9 @@ class LogIn(Action):
             conn.send(f'[EXIT]Connection close. Reason: Password incorrect.'.encode('utf-8'))
             return -1
         
-        if isUser:
-
-            return User(userid, username, pwd, email)
-        else:
+        if isAdmin:
             return Admin(userid, username, pwd, email)
-      
+            
+        else:
+            return User(userid, username, pwd, email)
     

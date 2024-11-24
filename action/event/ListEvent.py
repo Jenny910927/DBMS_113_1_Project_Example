@@ -3,9 +3,11 @@ from DB_utils import list_available_study_group
 class ListEvent(Action):
     def exec(self, conn, user):
         print("List Event")
+
+        conn.send("Please wait for fetching data...\n".encode('utf-8'))
+
         table = list_available_study_group()
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
-    
+
+        self.send_table(conn, table)
+        
         return

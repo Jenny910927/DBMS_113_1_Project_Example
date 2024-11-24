@@ -7,10 +7,8 @@ class SearchEvent(Action):
         course_name = self.read_input(conn, "course name")
         
         table = search_study_event(course_name)
-
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
+        self.send_table(conn, table)
+        
         return
 
 
