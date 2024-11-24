@@ -7,8 +7,6 @@ class ListUserInfo(Action):
         userid = self.read_input(conn, "user id that you want to show")
 
         table = list_user_info(userid)
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
+        self.send_table(conn, table)
     
         return 

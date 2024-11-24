@@ -9,8 +9,6 @@ class FindCourse(Action):
         print(f'Find Course | {instructor_name}, {course_name}')
         
         table = find_course(instructor_name, course_name)
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
+        self.send_table(conn, table)
     
         return 

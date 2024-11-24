@@ -12,7 +12,5 @@ class SearchClassroom(Action):
         print(f'Find Course | {building_name}, {capacity_size}, {floor_number}, {room_name}')
         
         table = search_classroom(building_name, capacity_size, floor_number, room_name)
-        conn.send('\n'.encode('utf-8'))
-        conn.send(table.encode('utf-8'))
-        conn.send('\n'.encode('utf-8'))
+        self.send_table(conn, table)
     

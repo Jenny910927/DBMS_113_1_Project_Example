@@ -68,6 +68,7 @@
 
 ## 使用方法
 
+- 使用備份檔 `I'm in database backup.backup` 復原資料庫
 - 預設連線通道為 **127.0.0.1:8800**，可至 `server.py` 及 `client.py` 修改
 - 在 `DB_utils.py` 設定**資料庫名稱** (DB_NAME)、**使用者名稱** (DB_USER)、**主機位置** (DB_HOST)及**通訊埠** (DB_PORT)
 
@@ -82,6 +83,8 @@ python .\server.py
 ```bash
 python .\client.py 
 ```
+
+**Notes:** 功能 `[2] List All Available Study Events` 因為query的資料量太大，需等待約半分鐘的資料傳遞，以及連線介面的 Scrollback Buffer 建議調大才能看到所有輸出。
 
 
 
