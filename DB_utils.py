@@ -3,8 +3,8 @@ import psycopg2
 from tabulate import tabulate
 from threading import Lock
 
-DB_NAME = "STUDY_GROUP_W_INDEX"
-DB_USER = "DBTA"
+DB_NAME = "I'M_IN"
+DB_USER = "dbta"
 DB_HOST = "127.0.0.1"
 DB_PORT = 5432
 
